@@ -1,49 +1,35 @@
+import 'package:coordinator/router/routes.dart';
+import 'package:coordinator/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  //await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'IAP Coordinator',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
-      ),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          
+        home: const FirstRoute(),
+        title: 'IAP Coordinator',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.indigo,
         ),
-      ),
-    );
+        routes: {
+          /*Routes.orderForm: (context) => const orderForm(),
+          Routes.orderDetail: (context) => const OrderDetail(),
+          Routes.profile: (context) => const UserProfile(),
+          Routes.location: (context) => const Location(),
+          Routes.contactUs: (context) => const contactUs(),
+          Routes.paymentOption: (context) => const PaymentOption(),
+          Routes.codOption: (context) => const CodOption(),
+          Routes.transferOption: (context) => const TransferOption(),*/
+          Routes.homeScreen: (context) => const FirstRoute()
+        });
   }
 }
