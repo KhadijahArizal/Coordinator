@@ -1,5 +1,7 @@
 import 'package:coordinator/router/routes.dart';
 import 'package:coordinator/screens/home_screen.dart';
+import 'package:coordinator/screens/signin_screen.dart';
+//import 'package:coordinator/screens/signin_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
@@ -14,12 +16,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: const FirstRoute(),
+        home: const SecondRoute(),//tukar route dkt sini
         title: 'IAP Coordinator',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.indigo,
-        ),
+       
         routes: {
           /*Routes.orderForm: (context) => const orderForm(),
           Routes.orderDetail: (context) => const OrderDetail(),

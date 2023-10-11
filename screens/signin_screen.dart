@@ -5,36 +5,30 @@ class SecondRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-   
-        child: Column(
-        
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-          Image.asset(
+    return Row(
+
+
+      children: <Widget>[
+        Expanded(
+          child: Container(
+            color: Colors.white,
+            height: double.infinity,
+          
+          child: Image.asset(
             "assets/images/iium.png",
             height: 120,
             width: 120,
             alignment: Alignment.center,
           ),
-          const Text(
-            'i-KICT',
-            style: TextStyle(fontSize: 20),
           ),
-          const Text(
-            'Industrial Attachement Programme',
-            style: TextStyle(fontSize: 20),
+        ),
+        Expanded(
+          child: Container(
+            color: Colors.amber,
+            height: double.infinity,
           ),
-          ElevatedButton(
-            child: const Text('Start'),
-            onPressed: () {
-               Navigator.pop(context);
-            },
-          ),
-        ],
-      ),
-    )
-    );
+        ),
+      ]);
+    
   }
 }
