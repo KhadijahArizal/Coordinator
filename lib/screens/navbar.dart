@@ -1,4 +1,5 @@
 import 'package:coordinator/screens/applications.dart';
+import 'package:coordinator/screens/signin_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../screens/dashboard.dart';
@@ -79,7 +80,10 @@ class nav_bar extends StatelessWidget {
                 buildMenuItem(
                   text: 'Quit',
                   icon: Icons.exit_to_app_rounded,
-                  onClicked: () => SystemNavigator.pop(),
+                  onClicked: () {
+                    Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const Signin()));
+                  },
                 ),
               ]))),
     );

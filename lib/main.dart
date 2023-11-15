@@ -1,10 +1,5 @@
 import 'package:coordinator/router/routes.dart';
-//import 'package:coordinator/screens/applications.dart';
-//import 'package:coordinator/screens/dashboard.dart';
 import 'package:coordinator/screens/home_screen.dart';
-import 'package:coordinator/screens/signin_screen.dart';
-//import 'package:coordinator/screens/signin_screen.dart';
-//import 'package:coordinator/screens/signin_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
@@ -19,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: const Signin(),//tukar route dkt sini
+        home: const MyHomePage(),//tukar route dkt sini
         title: 'IAP Coordinator',
         debugShowCheckedModeBanner: false,
        

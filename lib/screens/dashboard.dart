@@ -87,7 +87,7 @@ class _DashboardState extends State<Dashboard> {
                           style: TextStyle(
                               color: Colors.black87,
                               fontSize: 40,
-                              fontStyle: FontStyle.italic,
+                              //fontStyle: FontStyle.italic,
                               fontWeight: FontWeight.w900,
                               fontFamily: 'Futura'),
                         ),
