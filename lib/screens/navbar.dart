@@ -1,9 +1,12 @@
 
-import 'package:coordinator/screens/signin_screen.dart';
-import 'package:coordinator/screens/tabsbar.dart';
+//import 'package:coordinator/screens/signin_screen.dart';
+import 'package:coordinator/screens/applications.dart';
+import 'package:coordinator/screens/coverletter.dart';
+import 'package:coordinator/screens/home_screen.dart';
+import 'package:coordinator/screens/placement.dart';
 import 'package:flutter/material.dart';
 import '../screens/dashboard.dart';
-
+import 'package:coordinator/auth_services.dart';
 
 void main() => runApp(const MaterialApp(debugShowCheckedModeBanner: false));
 
@@ -14,6 +17,7 @@ class nav_bar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+      AuthService authService = AuthService();
     return Drawer(
       backgroundColor: Colors.white,
       child: Material(
@@ -78,10 +82,11 @@ class nav_bar extends StatelessWidget {
                 buildMenuItem(
                   text: 'Quit',
                   icon: Icons.exit_to_app_rounded,
-                  onClicked: () {
+                  onClicked: authService.handleSignOut,
+                  /*() {
                     Navigator.push(context,
                     MaterialPageRoute(builder: (context) => Signin()));
-                  },
+                  },*/
                 ),
               ]))),
     );
@@ -117,27 +122,27 @@ class nav_bar extends StatelessWidget {
         break;
       case 1:
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const TabBars(),
+          builder: (context) => const Applications(),
         ));
         break;
       case 2:
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const TabBars(),
+          builder: (context) => const CoverLetter(),
         ));
         break;
       case 3:
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const TabBars(),
+          builder: (context) => const Placement(),
         ));
         break;
       case 4:
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const TabBars(),
+          builder: (context) => const MyHomePage(),
         ));
         break;
       case 5:
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const TabBars(),
+          builder: (context) => const Dashboard(title: ''),
         ));
         break;
     }

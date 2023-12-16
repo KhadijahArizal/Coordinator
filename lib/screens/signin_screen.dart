@@ -1,16 +1,17 @@
-//import 'package:coordinator/screens/dashboard.dart';
-import 'package:coordinator/screens/login_controller.dart';
+import 'package:coordinator/auth_services.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
+
+
 //import 'package:google_sign_in/google_sign_in.dart';
 
 class Signin extends StatelessWidget {
-  final controller = Get.put(LoginController());
+  
   Signin({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    AuthService authService = AuthService();
     return Scaffold(
       body: Row(
         children: <Widget>[
@@ -67,8 +68,8 @@ class Signin extends StatelessWidget {
                       ),
                       child: InkWell(
                         borderRadius: BorderRadius.circular(8.0),
-                        onTap: () {
-                          controller.login();
+                        onTap: authService.handlesSignin,
+                          //controller.login();
                           //GoogleSignIn().signIn();
                           /*Navigator.push(
                               context,
@@ -76,7 +77,7 @@ class Signin extends StatelessWidget {
                                   builder: (context) => const Dashboard(
                                         title: '',
                                       )));*/
-                        },
+                        
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: Row(

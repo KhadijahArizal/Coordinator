@@ -1,3 +1,5 @@
+//import 'package:coordinator/screens/home_screen.dart';
+
 class Routes {
   /*static const orderForm = '/orderform_screen';
   static const userData = '/user_orderD';
@@ -8,5 +10,5 @@ class Routes {
   static const paymentOption = '/payment_screen';
   static const codOption = '/cod_screen';
   static const transferOption = '/transfer_screen';*/
-  static const homeScreen = '/home_screen';
+  static const MyHomePage = '/MyHomePage';
 }

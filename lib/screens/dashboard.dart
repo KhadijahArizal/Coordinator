@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:coordinator/screens/navbar.dart';
@@ -23,15 +24,16 @@ class _DashboardState extends State<Dashboard> {
       );
 
   Widget _coordinatorContact(
-          {required String staffID, required String email}) =>
+          {//required String staffID,
+           required String email}) =>
       Container(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
+           /* Text(
               staffID,
               style: const TextStyle(color: Colors.white, fontSize: 20),
-            ),
+            ),*/
             const VerticalDivider(
                 color: Colors.white,
                 width: 10,
@@ -51,6 +53,7 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+   // AuthService authService = AuthService();
     return Scaffold(
       backgroundColor: const Color.fromRGBO(244, 243, 243, 1),
       appBar: AppBar(
@@ -121,7 +124,7 @@ class _DashboardState extends State<Dashboard> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   _coordinatorContact(
-                      email: 'izzuddin@live.iium.edu.my', staffID: 'IT101760'),
+                      email: ('')),//FirebaseAuth.instance.currentUser!.email.toString())),
                 ],
               ),
             ),
@@ -131,4 +134,4 @@ class _DashboardState extends State<Dashboard> {
       )),
     );
   }
-}
+} 
