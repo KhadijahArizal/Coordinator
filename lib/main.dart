@@ -1,5 +1,8 @@
 import 'package:coordinator/router/routes.dart';
+import 'package:coordinator/screens/auth.dart';
+
 import 'package:coordinator/screens/dashboard.dart';
+
 
 
 import 'package:firebase_core/firebase_core.dart';
@@ -30,8 +33,10 @@ class MyApp extends StatelessWidget {
       initialRoute: Routes.MyHomePage, // Set the initial route
       title: 'IAP Coordinator',
       debugShowCheckedModeBanner: false,
-      home: Dashboard(title: ''),//Applications(title: 'title'),//AuthPage(), 
+      home: AuthPage(), ////AuthPage(), 
       //MyHomePage(),
+
+      
     );
   }
 }

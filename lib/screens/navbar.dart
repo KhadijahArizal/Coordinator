@@ -1,32 +1,30 @@
 
-//import 'package:coordinator/screens/signin_screen.dart';
 import 'package:coordinator/screens/applications.dart';
 import 'package:coordinator/screens/coverletter.dart';
-import 'package:coordinator/screens/home_screen.dart';
+import 'package:coordinator/screens/dashboard.dart';
 import 'package:coordinator/screens/placement.dart';
+import 'package:coordinator/screens/tabsbar.dart';
+
 import 'package:flutter/material.dart';
-import '../screens/dashboard.dart';
-import 'package:coordinator/auth_services.dart';
 
-void main() => runApp(const MaterialApp(debugShowCheckedModeBanner: false));
 
-bool _visible = true;
+class NavBar extends StatefulWidget {
+  //const NavBar ({super.key});
+  //({required Key key}) : super(key: key);
+ 
+ @override
+ State<NavBar> createState() => _NavBarState();
+}
 
-class nav_bar extends StatelessWidget {
-  const nav_bar({super.key});
-
+class _NavBarState extends State<NavBar>{
   @override
   Widget build(BuildContext context) {
-      AuthService authService = AuthService();
     return Drawer(
-      backgroundColor: Colors.white,
-      child: Material(
-          color: Colors.white,
-          child: Visibility(
-              visible: _visible,
-              child: ListView(children: <Widget>[
-                const DrawerHeader(
-                  decoration: BoxDecoration(
+      backgroundColor: Colors.amberAccent,
+        child: ListView(
+          children: [
+            const DrawerHeader(
+               decoration: BoxDecoration(
                     color: Color.fromRGBO(148, 112, 18, 10),
                   ),
                   child: Text('i-KICT',
@@ -40,111 +38,42 @@ class nav_bar extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                buildMenuItem(
-                    text: 'Dashboard',
-                    icon: Icons.dashboard_rounded,
-                    onClicked: (() => selectedItem(context, 0))),
-                const SizedBox(
-                  height: 10,
-                ),
-                buildMenuItem(
-                    text: 'IAP Applications',
-                    icon: Icons.app_registration_sharp,
-                    onClicked: (() => selectedItem(context, 1))),
-                const SizedBox(
-                  height: 10,
-                ),
-                buildMenuItem(
-                    text: 'Cover Letter Request',
-                    icon: Icons.request_page,
-                    onClicked: (() => selectedItem(context, 3))),
-                const SizedBox(
-                  height: 10,
-                ),
-                buildMenuItem(
-                    text: 'Placement Verification',
-                    icon: Icons.approval_sharp,
-                    onClicked: (() =>
-                        selectedItem(context, 2))), //_visible = false
-                const SizedBox(
-                  height: 10,
-                ),
-                buildMenuItem(
-                    text: 'Internship Students',
-                    icon: Icons.list_alt_sharp,
-                    onClicked: (() => selectedItem(context, 4))),
-                const SizedBox(
-                  height: 15,
-                ),
-                const Divider(
-                  color: Colors.black54,
-                ),
-                buildMenuItem(
-                  text: 'Quit',
-                  icon: Icons.exit_to_app_rounded,
-                  onClicked: authService.handleSignOut,
-                  /*() {
-                    Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Signin()));
-                  },*/
-                ),
-              ]))),
-    );
-  }
-
-  Widget buildMenuItem(
-      {required String text, required IconData icon, VoidCallback? onClicked}) {
-    const hoverColor = Colors.white70;
-
-    return ListTile(
-        leading: Icon(
-          icon,
-          color: const Color.fromRGBO(148, 112, 18, 10),
-        ),
-        title: Text(
-          text,
-          style: const TextStyle(color: Colors.black87, fontFamily: 'Futura'),
-        ),
-        hoverColor: hoverColor,
-        onTap: onClicked);
-  }
-
-  void selectedItem(BuildContext context, int index) {
-    Navigator.of(context).pop();
-    switch (index) {
-      case 0:
-        Navigator.of(context).push(
-          MaterialPageRoute(
-              builder: (context) => const Dashboard(
-                    title: '',
-                  )),
+                 ListTile(
+              leading: Icon(Icons.dashboard_rounded),
+              title: Text('Dashboard'),
+            onTap: () =>{ Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => Dashboard(title: '',)))
+            },
+            ),
+            ListTile(
+              leading: Icon(Icons.app_registration_sharp),
+              title: Text('IAP Applications'),
+            onTap: () =>{ Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => TabBars()))
+            },
+            ),
+            ListTile(
+              leading: Icon(Icons.request_page),
+              title: Text('Cover Letter Request'),
+            onTap: () =>{ Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => TabBars()))
+            },
+            ),
+            ListTile(
+              leading: Icon(Icons.approval_sharp),
+              title: Text('Placement Verification'),
+            onTap: () =>{ Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => TabBars()))
+            },
+            ),
+            
+            ],
+            ),
         );
-        break;
-      case 1:
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const Applications(),
-        ));
-        break;
-      case 2:
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const CoverLetter(),
-        ));
-        break;
-      case 3:
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const Placement(),
-        ));
-        break;
-      case 4:
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const MyHomePage(),
-        ));
-        break;
-      case 5:
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const Dashboard(title: ''),
-        ));
-        break;
-    }
+    
+    
+
+      
   }
 }
+

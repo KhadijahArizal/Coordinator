@@ -1,4 +1,5 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:coordinator/screens/navbar.dart';
@@ -62,7 +63,7 @@ class _DashboardState extends State<Dashboard> {
           systemOverlayStyle: SystemUiOverlayStyle.dark,
           iconTheme: const IconThemeData(
               color: Color.fromRGBO(148, 112, 18, 1), size: 30)),
-      drawer: const nav_bar(),
+      drawer:  NavBar(),
       body: SafeArea(
           child: Container(
         padding: const EdgeInsets.all(20),
@@ -124,11 +125,12 @@ class _DashboardState extends State<Dashboard> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   _coordinatorContact(
-                      email: ('')),//FirebaseAuth.instance.currentUser!.email.toString())),
+                      email: (FirebaseAuth.instance.currentUser!.email.toString())),
                 ],
               ),
             ),
             const SizedBox(height: 10),
+
           ]),
         ]),
       )),

@@ -68,7 +68,7 @@ class Signin extends StatelessWidget {
                       ),
                       child: InkWell(
                         borderRadius: BorderRadius.circular(8.0),
-                        onTap: authService.handlesSignin,
+                        onTap: authService.hanglesSignin,
                           //controller.login();
                           //GoogleSignIn().signIn();
                           /*Navigator.push(

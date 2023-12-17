@@ -6,7 +6,7 @@ class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
 //google sign in
-  Future<void> handlesSignin() async {
+  Future<void> hanglesSignin() async {
     try {
       GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser != null) {
