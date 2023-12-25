@@ -1,10 +1,43 @@
-
 import 'package:coordinator/screens/IAP%20Request/iapform.dart';
 import 'package:coordinator/screens/navbar.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+
+class UserData {
+  final String matric;
+  final String name;
+  final String email;
+  final String major;
+  final String admission;
+  final String univ;
+  final String department;
+  final String kulliyyah;
+  final String elective;
+  final String ch;
+  final String total;
+  final String semester;
+  final String confirmation;
+  final String graduation;
+  final String partial;
+
+  UserData({
+    required this.matric,
+    required this.name,
+    required this.email,
+    required this.major,
+    required this.admission,
+    required this.univ,
+    required this.department,
+    required this.kulliyyah,
+    required this.elective,
+    required this.ch,
+    required this.total,
+    required this.semester,
+    required this.confirmation,
+    required this.graduation,
+    required this.partial,
+  });
+}
 
 class ListStudent1 extends StatefulWidget {
   const ListStudent1({Key? key}) : super(key: key);
@@ -14,57 +47,77 @@ class ListStudent1 extends StatefulWidget {
 }
 
 class _ListStudent1State extends State<ListStudent1> {
+  late DatabaseReference _ref;
+  late Future<DataSnapshot> _dataSnapshotFuture;
 
-  final auth = FirebaseAuth.instance;
-  final ref = FirebaseDatabase.instance.ref('Student').child('IAP Form');
   @override
+  void initState() {
+    super.initState();
+    _ref = FirebaseDatabase.instance.ref().child('Student').child('IAP Form');
+    _dataSnapshotFuture = _fetchData();
+  }
 
+  Future<DataSnapshot> _fetchData() async {
+    try {
+      DatabaseEvent event = await _ref.once();
+      return event.snapshot;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-
       appBar: AppBar(
-        title: const Text('List of Industrial Attachment Programme Student (IAP Form)'),  
-        centerTitle: true,      
-        toolbarHeight: 200,
-        backgroundColor: const Color.fromRGBO(0, 146, 143, 10),
+        title: const Text('List of Students'),
+        centerTitle: true,
       ),
       drawer: NavBar(),
-  
-      body: Column(
-        children: [
-          Expanded(
-            child: FirebaseAnimatedList(
-              query: ref,
-              itemBuilder: (context, snapshot, animation, index) {
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(200.0, 20.0, 200.0, 20.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      final matric = snapshot.child('Matric').value.toString();
-                      final name = snapshot.child('Name').value.toString();
-                      final email = snapshot.child('Email').value.toString();
-                      final major = snapshot.child('Major').value.toString();
-                      final admission = snapshot.child('Admission Type').value.toString();
-                      final univ = snapshot.child('Univ Required Course').value.toString();
-                      final department = snapshot.child('Department Required Course').value.toString();
-                      final kulliyyah = snapshot.child('Kulliyyah Required Course').value.toString();
-                      final elective = snapshot.child('Department Elective Course').value.toString();
-                      final ch = snapshot.child('CH Current Sem').value.toString();
-                      final total = snapshot.child('Total CH').value.toString();
-                      final semester = snapshot.child('Semester').value.toString();
-                      final partial = snapshot.child('Partial Transcript').value.toString();
-                      final graduation = snapshot.child('Graduation Audit').value.toString();
-                      final confirmation = snapshot.child('Confirmation Letter').value.toString();
+      body: FutureBuilder<DataSnapshot>(
+        future: _dataSnapshotFuture,
+        builder: (BuildContext context, AsyncSnapshot<DataSnapshot> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else if (!snapshot.hasData || snapshot.data?.value == null) {
+            return Center(
+              child: Text('No data available.'),
+            );
+          } else {
+            DataSnapshot dataSnapshot = snapshot.data!;
+            Map<dynamic, dynamic>? userData =
+                dataSnapshot.value as Map<dynamic, dynamic>?;
 
+            List<UserData> userTiles = [];
 
+            if (userData != null) {
+              userData.forEach((key, value) {
+                // Process each user's data and create UserData objects accordingly
+                if (value is Map<dynamic, dynamic>) {
+                  String matric = value['Matric'] ?? '';
+                  String name = value['Name'] ?? '';
+                  String email = value['Email'] ?? '';
+                  String major = value['Major'] ?? '';
+                  String admission = value['Admission Type'] ?? '';
+                  String univ = value['Univ Required Course'] ?? '';
+                  String department = value['Department Required Course'] ?? '';
+                  String kulliyyah = value['Kulliyyah Required Course'] ?? '';
+                  String elective = value['Department Elective Course'] ?? '';
+                  String ch = value['CH Current Sem'] ?? '';
+                  String total = value['Total CH'] ?? '';
+                  String semester = value['Semester'] ?? '';
+                  String partial = value['Partial Transcript'] ?? '';
+                  String graduation = value['Graduation Audit'] ?? '';
+                  String confirmation = value['Confirmation Letter'] ?? '';
 
-
-
-
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => IAPForm(
-                          matric: matric, 
+                  UserData user = UserData(
+                    matric: matric, 
                           name: name, 
                           email: email,
                           major: major,
@@ -80,32 +133,60 @@ class _ListStudent1State extends State<ListStudent1> {
                           graduation: graduation,
                           confirmation: confirmation,
 
-                          ),
-                      ));
-                    },
-                    child: Column(
-                      children: [
-                        ListTile(
-                          leading: Text(
-                            snapshot.child('Matric').value.toString(),
-                            style: const TextStyle(
-                              fontSize: 16.0,
-                              decoration: TextDecoration.underline,
+
+                     );
+                  userTiles.add(user);
+                }
+              });
+            }
+
+            return ListView(
+              children: userTiles.isNotEmpty
+                  ? userTiles.map((user) {
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => IAPForm(
+                                matric: user.matric,
+                                name: user.name,
+                                email: user.email,
+                                major: user.major,
+                                admission: user.admission,
+                                univ: user.univ,
+                                department: user.department,
+                                kulliyyah: user.kulliyyah,
+                                elective: user.elective,
+                                ch: user.ch,
+                                total: user.total,
+                                semester: user.semester,
+                                confirmation: user.confirmation,
+                                graduation: user.graduation,
+                                partial: user.partial,
+
+                                // Pass other fields as needed
+                              ),
                             ),
+                          );
+                        },
+                        child: ListTile(
+                          title: Text(user.matric),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(user.name),
+                              Text(user.major),
+                              // Add other fields as needed
+                            ],
                           ),
-                          title: Text(snapshot.child('Name').value.toString()),
-                          trailing: Text(snapshot.child('Major').value.toString()),
                         ),
-                        const Divider(color: Colors.black),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-          const SizedBox(height: 20.0),
-        ],
+                      );
+                    }).toList()
+                  : [Center(child: Text('No valid data found.'))],
+            );
+          }
+        },
       ),
     );
   }

@@ -1,10 +1,5 @@
-
-
-import 'package:coordinator/screens/IAP%20Placement/placement.dart';
 import 'package:coordinator/screens/navbar.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 
 class ListStudent3 extends StatefulWidget {
@@ -15,89 +10,84 @@ class ListStudent3 extends StatefulWidget {
 }
 
 class _ListStudent3State extends State<ListStudent3> {
+  late DatabaseReference _iapFormRef;
+  late DatabaseReference _companyDetailsRef;
+  late List<UserData> _userData = [];
 
-  final auth = FirebaseAuth.instance;
-  final ref = FirebaseDatabase.instance.ref('Student').child('Company Details');
   @override
+  void initState() {
+    super.initState();
+    _iapFormRef = FirebaseDatabase.instance.ref().child('Student').child('IAP Form');
+    _companyDetailsRef = FirebaseDatabase.instance.ref().child('Student').child('Company Details');
+    _fetchUserData();
+  }
 
+  Future<void> _fetchUserData() async {
+    try {
+      DataSnapshot iapSnapshot = await _iapFormRef.once().then((event) => event.snapshot);
+      DataSnapshot companySnapshot = await _companyDetailsRef.once().then((event) => event.snapshot);
+
+      Map<dynamic, dynamic>? iapData = iapSnapshot.value as Map<dynamic, dynamic>?;
+      Map<dynamic, dynamic>? companyData = companySnapshot.value as Map<dynamic, dynamic>?;
+
+      if (iapData != null && companyData != null) {
+        iapData.forEach((key, value) {
+          if (value is Map<dynamic, dynamic> && companyData.containsKey(key)) {
+            String matric = value['Matric'] ?? '';
+            String name = value['Name'] ?? '';
+            String companyName = companyData[key]['Company Name'] ?? '';
+            String companyAddress = companyData[key]['Address'] ?? '';
+
+            UserData userData = UserData(matric: matric, name: name, companyName: companyName, companyAddress: companyAddress);
+            _userData.add(userData);
+          }
+        });
+      }
+
+      setState(() {});
+    } catch (error) {
+      print('Error fetching data: $error');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-
       appBar: AppBar(
-        title: const Text('List of Industrial Attachment Programme Student (Company Details)'),  
-        centerTitle: true,      
-        toolbarHeight: 200,
-        backgroundColor: const Color.fromRGBO(0, 146, 143, 10),
+        title: const Text('List of Students'),
+        centerTitle: true,
       ),
       drawer: NavBar(),
-  
-      body: Column(
-        children: [
-          Expanded(
-            child: FirebaseAnimatedList(
-              query: ref,
-              itemBuilder: (context, snapshot, animation, index) {
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(200.0, 20.0, 200.0, 20.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      final zone = snapshot.child('Zone').value.toString();
-                      final comname = snapshot.child('Company Name').value.toString();
-                      final address = snapshot.child('Address').value.toString();
-                      final postcode = snapshot.child('Postcode').value.toString();
-                      final industry = snapshot.child('Industry').value.toString();
-                      final allowance = snapshot.child('Monthly Allowance').value.toString();
-                      final duration = snapshot.child('Duration').value.toString();
-                      final sector = snapshot.child('Sector').value.toString();
-                      final start = snapshot.child('Start Date').value.toString();
-                      final end = snapshot.child('End Date').value.toString();
-                      final offer = snapshot.child('Offer Letter').value.toString();
-
-
-
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => PlacementDetails(
-                          zone: zone,
-                          comname: comname,
-                          address: address,
-                          postcode: postcode,
-                          industry: industry,
-                          allowance: allowance,
-                          duration: duration,
-                          sector: sector,
-                          start: start,
-                          end: end,
-                          offer: offer,
-
-                          ),
-                      ));
-                    },
-                    child: Column(
-                      children: [
-                        ListTile(
-                          leading: Text(
-                            snapshot.child('Company Name').value.toString(),
-                            style: const TextStyle(
-                              fontSize: 16.0,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                          title: Text(snapshot.child('Zone').value.toString()),
-                          trailing: Text(snapshot.child('Industry').value.toString()),
-                        ),
-                        const Divider(color: Colors.black),
-                      ],
-                    ),
+      body: _userData.isNotEmpty
+          ? ListView.builder(
+              itemCount: _userData.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(_userData[index].name),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Matric: ${_userData[index].matric}'),
+                      Text('Company: ${_userData[index].companyName}'),
+                      Text('Address: ${_userData[index].companyAddress}'),
+                    ],
                   ),
+                  // onTap: () {
+                  //   // Add onTap functionality if needed
+                  // },
                 );
               },
-            ),
-          ),
-          const SizedBox(height: 20.0),
-        ],
-      ),
+            )
+          : Center(child: CircularProgressIndicator()),
     );
   }
 }
 
+class UserData {
+  final String matric;
+  final String name;
+  final String companyName;
+  final String companyAddress;
+
+  UserData({required this.matric, required this.name, required this.companyName, required this.companyAddress});
+}
