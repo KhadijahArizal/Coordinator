@@ -53,6 +53,12 @@ class _ListStudent1State extends State<ListStudent1> {
                       final ch = snapshot.child('CH Current Sem').value.toString();
                       final total = snapshot.child('Total CH').value.toString();
                       final semester = snapshot.child('Semester').value.toString();
+                      final partial = snapshot.child('Partial Transcript').value.toString();
+                      final graduation = snapshot.child('Graduation Audit').value.toString();
+                      final confirmation = snapshot.child('Confirmation Letter').value.toString();
+
+
+
 
 
 
@@ -69,7 +75,10 @@ class _ListStudent1State extends State<ListStudent1> {
                           elective: elective,
                           ch: ch,
                           total: total,
-                          semester: semester,
+                          semester: semester, 
+                          partial: partial,
+                          graduation: graduation,
+                          confirmation: confirmation,
 
                           ),
                       ));
@@ -101,4 +110,3 @@ class _ListStudent1State extends State<ListStudent1> {
     );
   }
 }
-
