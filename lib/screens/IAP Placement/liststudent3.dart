@@ -36,9 +36,13 @@ class _ListStudent3State extends State<ListStudent3> {
             String matric = value['Matric'] ?? '';
             String name = value['Name'] ?? '';
             String companyName = companyData[key]['Company Name'] ?? '';
-            String companyAddress = companyData[key]['Address'] ?? '';
+            String zone = companyData[key]['Zone'] ?? '';
 
-            UserData userData = UserData(matric: matric, name: name, companyName: companyName, companyAddress: companyAddress);
+            UserData userData = UserData(
+              matric: matric, 
+              name: name, 
+              companyName: companyName, 
+              zone: zone);
             _userData.add(userData);
           }
         });
@@ -69,7 +73,7 @@ class _ListStudent3State extends State<ListStudent3> {
                     children: [
                       Text('Matric: ${_userData[index].matric}'),
                       Text('Company: ${_userData[index].companyName}'),
-                      Text('Address: ${_userData[index].companyAddress}'),
+                      Text('Zone: ${_userData[index].zone}'),
                     ],
                   ),
                   // onTap: () {
@@ -87,7 +91,7 @@ class UserData {
   final String matric;
   final String name;
   final String companyName;
-  final String companyAddress;
+  final String zone;
 
-  UserData({required this.matric, required this.name, required this.companyName, required this.companyAddress});
+  UserData({required this.matric, required this.name, required this.companyName, required this.zone});
 }
