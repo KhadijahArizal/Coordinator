@@ -14,6 +14,9 @@ class IAPForm extends StatelessWidget {
   final String ch;
   final String total;
   final String semester;
+  final String confirmation;
+  final String graduation;
+  final String partial;
 
   const IAPForm({
     required this.matric,
@@ -28,6 +31,9 @@ class IAPForm extends StatelessWidget {
     required this.ch,
     required this.total,
     required this.semester,
+    required this.confirmation,
+    required this.graduation,
+    required this.partial,
   });
 
   @override
@@ -52,6 +58,9 @@ class IAPForm extends StatelessWidget {
             _buildListTile('CH Current Sem' , ch),
             _buildListTile('Total CH' ,total),
             _buildListTile('Semester' , semester),
+            _buildListTile('Semester' , confirmation),
+            _buildListTile('Semester' , graduation),
+            _buildListTile('Semester' , partial),
           ],
         ),
       ),
