@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PlacementDetails extends StatelessWidget {
+  final String matric;
   final String zone;
   final String comname;
   final String address;
@@ -14,6 +15,7 @@ class PlacementDetails extends StatelessWidget {
   final String offer;
 
   const PlacementDetails({
+    required this.matric,
     required this.zone,
     required this.comname,
     required this.address,
@@ -32,12 +34,13 @@ class PlacementDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('User Details - $comname'),
+        title: Text('Student Matric No: $matric'),
       ),
       body: Container(
         padding: const EdgeInsets.all(20.0), // Example padding, adjust as needed
         child: ListView(
           children: [
+
             _buildListTile('Zone' ,zone),
           _buildListTile('Company Name' ,comname),
           _buildListTile('Address' ,address),

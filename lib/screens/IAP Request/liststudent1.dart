@@ -72,13 +72,17 @@ class _ListStudent1State extends State<ListStudent1> {
       appBar: AppBar(
         title: const Text('List of Students'),
         centerTitle: true,
+        backgroundColor: const Color.fromRGBO(0, 146, 143, 10),
+
       ),
       drawer: NavBar(),
-      body: FutureBuilder<DataSnapshot>(
+      body: Container(
+        margin: const EdgeInsets.only(top: 20), // Adjust the top margin as needed
+        child:FutureBuilder<DataSnapshot>(
         future: _dataSnapshotFuture,
         builder: (BuildContext context, AsyncSnapshot<DataSnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
@@ -86,7 +90,7 @@ class _ListStudent1State extends State<ListStudent1> {
               child: Text('Error: ${snapshot.error}'),
             );
           } else if (!snapshot.hasData || snapshot.data?.value == null) {
-            return Center(
+            return const Center(
               child: Text('No data available.'),
             );
           } else {
@@ -118,76 +122,101 @@ class _ListStudent1State extends State<ListStudent1> {
 
                   UserData user = UserData(
                     matric: matric, 
-                          name: name, 
-                          email: email,
-                          major: major,
-                          admission: admission,
-                          univ: univ,
-                          department: department,
-                          kulliyyah: kulliyyah,
-                          elective: elective,
-                          ch: ch,
-                          total: total,
-                          semester: semester, 
-                          partial: partial,
-                          graduation: graduation,
-                          confirmation: confirmation,
-
-
-                     );
+                    name: name, 
+                    email: email,
+                    major: major,
+                    admission: admission,
+                    univ: univ,
+                    department: department,
+                    kulliyyah: kulliyyah,
+                    elective: elective,
+                    ch: ch,
+                    total: total,
+                    semester: semester, 
+                    partial: partial,
+                    graduation: graduation,
+                    confirmation: confirmation,
+                  );
                   userTiles.add(user);
                 }
               });
             }
 
-            return ListView(
+             return Center(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: ListView(
               children: userTiles.isNotEmpty
                   ? userTiles.map((user) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => IAPForm(
-                                matric: user.matric,
-                                name: user.name,
-                                email: user.email,
-                                major: user.major,
-                                admission: user.admission,
-                                univ: user.univ,
-                                department: user.department,
-                                kulliyyah: user.kulliyyah,
-                                elective: user.elective,
-                                ch: user.ch,
-                                total: user.total,
-                                semester: user.semester,
-                                confirmation: user.confirmation,
-                                graduation: user.graduation,
-                                partial: user.partial,
-
-                                // Pass other fields as needed
+                      return Column(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => IAPForm(
+                                    matric: user.matric,
+                                    name: user.name,
+                                    email: user.email,
+                                    major: user.major,
+                                    admission: user.admission,
+                                    univ: user.univ,
+                                    department: user.department,
+                                    kulliyyah: user.kulliyyah,
+                                    elective: user.elective,
+                                    ch: user.ch,
+                                    total: user.total,
+                                    semester: user.semester,
+                                    confirmation: user.confirmation,
+                                    graduation: user.graduation,
+                                    partial: user.partial,
+                                    // Pass other fields as needed
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Center(
+                                  child: SizedBox(
+                                    height: 70, // Adjust the height as needed
+                                    child: Card(
+                                      elevation: 2,
+                                      child: ListTile(
+                                        title: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(user.matric),
+                                                Text(user.name),
+                                              ],
+                                            ),
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(user.major),
+                                                // Add other fields as needed
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                        child: ListTile(
-                          title: Text(user.matric),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(user.name),
-                              Text(user.major),
-                              // Add other fields as needed
+                              const SizedBox(height: 10), // Add spacing between items
                             ],
-                          ),
-                        ),
-                      );
-                    }).toList()
-                  : [Center(child: Text('No valid data found.'))],
+                          );
+                        }).toList()
+                      : [const Center(child: Text('No valid data found.'))],
+                ),
+              ),
             );
           }
         },
       ),
-    );
+     ) );
   }
 }

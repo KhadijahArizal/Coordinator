@@ -1,6 +1,6 @@
 import 'package:coordinator/screens/IAP%20Emergency/emergency.dart';
 import 'package:coordinator/screens/IAP%20Placement/liststudent3.dart';
-import 'package:coordinator/screens/IAP%20Supervisor/supervisor.dart';
+import 'package:coordinator/screens/IAP%20Supervisor/liststudent6.dart';
 import 'package:coordinator/screens/IAP%20Request/liststudent1.dart';
 import 'package:coordinator/screens/IAP%20Student%20Details/liststudent2.dart';
 import 'package:coordinator/screens/dashboard.dart';
@@ -83,7 +83,7 @@ class _NavBarState extends State<NavBar> {
           ListTile(
             leading: const Icon(Icons.edit_document),
              iconColor:const Color.fromRGBO(0, 146, 143, 10),
-            title: const Text('Student Details'),
+            title: const Text('Student '),
             onTap: () => {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => const ListStudent2()))
@@ -92,7 +92,7 @@ class _NavBarState extends State<NavBar> {
           ListTile(
             leading: const Icon(Icons.place_outlined),
              iconColor:const Color.fromRGBO(0, 146, 143, 10),
-            title: const Text('Placement Details'),
+            title: const Text('Placement '),
             onTap: () => {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => const ListStudent3()))
@@ -101,10 +101,10 @@ class _NavBarState extends State<NavBar> {
           ListTile(
             leading: const Icon(Icons.supervised_user_circle_outlined),
              iconColor:const Color.fromRGBO(0, 146, 143, 10),
-            title: const Text('Supervisor Details'),
+            title: const Text('Supervisor '),
             onTap: () => {
               Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const SupervisorDetails()))
+                  MaterialPageRoute(builder: (context) => const ListStudent6()))
             },
           ),
            ListTile(
@@ -113,13 +113,13 @@ class _NavBarState extends State<NavBar> {
             title: const Text('Examiner'),
             onTap: () => {
               Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const SupervisorDetails()))
+                  MaterialPageRoute(builder: (context) => const ListStudent6()))
             },
           ),
           ListTile(
             leading: const Icon(Icons.emergency_outlined),
              iconColor:const Color.fromRGBO(0, 146, 143, 10),
-            title: const Text('Emergency Contact Details'),
+            title: const Text('Emergency Contact'),
             onTap: () => {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => const EmergencyDetails()))
