@@ -29,6 +29,7 @@ class StudentDetails extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Student Details - Matric No: $matric'),
+        backgroundColor: const Color.fromRGBO(0, 146, 143, 10),
       ),
       body: Container(
         padding: const EdgeInsets.all(20.0), 

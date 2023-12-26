@@ -1,6 +1,6 @@
-import 'package:coordinator/screens/IAP%20Emergency/emergency.dart';
+import 'package:coordinator/screens/IAP%20Emergency/lisstudent6.dart';
 import 'package:coordinator/screens/IAP%20Placement/liststudent3.dart';
-import 'package:coordinator/screens/IAP%20Supervisor/liststudent6.dart';
+import 'package:coordinator/screens/IAP%20Supervisor/liststudent4.dart';
 import 'package:coordinator/screens/IAP%20Request/liststudent1.dart';
 import 'package:coordinator/screens/IAP%20Student%20Details/liststudent2.dart';
 import 'package:coordinator/screens/dashboard.dart';
@@ -104,16 +104,16 @@ class _NavBarState extends State<NavBar> {
             title: const Text('Supervisor '),
             onTap: () => {
               Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const ListStudent6()))
+                  MaterialPageRoute(builder: (context) => const ListStudent4()))
             },
           ),
            ListTile(
-            leading: const Icon(Icons.supervised_user_circle_outlined),
+            leading: const Icon(Icons.people_alt_outlined),
              iconColor:const Color.fromRGBO(0, 146, 143, 10),
             title: const Text('Examiner'),
             onTap: () => {
               Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const ListStudent6()))
+                  MaterialPageRoute(builder: (context) => const ListStudent4()))
             },
           ),
           ListTile(
@@ -122,7 +122,7 @@ class _NavBarState extends State<NavBar> {
             title: const Text('Emergency Contact'),
             onTap: () => {
               Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const EmergencyDetails()))
+                  MaterialPageRoute(builder: (context) => const ListStudent6()))
             },
           ),
           ListTile(

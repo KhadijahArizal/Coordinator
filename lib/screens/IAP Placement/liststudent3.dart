@@ -86,16 +86,19 @@ class _ListStudent3State extends State<ListStudent3> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('List of Students'),
+        title: const Text('List of Students Placement'),
         centerTitle: true,
         backgroundColor: const Color.fromRGBO(0, 146, 143, 10),
       ),
-      drawer: NavBar(),
-      body: Center(
-        child: _userData.isNotEmpty
-            ? SizedBox(
+       drawer: NavBar(),
+    body: Center(
+      child: _userData.isNotEmpty
+          ? Padding(
+              padding: const EdgeInsets.only(top: 2.0), // Adjust the top padding as needed
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.8,
                 child: ListView.builder(
+                  padding: EdgeInsets.zero,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: _userData.length,
@@ -161,8 +164,9 @@ class _ListStudent3State extends State<ListStudent3> {
                     );
                   },
                 ),
-              )
-            : const Center(child: CircularProgressIndicator()),
+              ),
+            )
+          : const Center(child: CircularProgressIndicator()),
       ),
     );
   }

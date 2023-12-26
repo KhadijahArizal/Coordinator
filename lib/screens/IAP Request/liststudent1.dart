@@ -70,7 +70,7 @@ class _ListStudent1State extends State<ListStudent1> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('List of Students'),
+        title: const Text('List of Students (IAP Form)'),
         centerTitle: true,
         backgroundColor: const Color.fromRGBO(0, 146, 143, 10),
 
@@ -177,35 +177,55 @@ class _ListStudent1State extends State<ListStudent1> {
                               );
                             },
                             child: Center(
-                                  child: SizedBox(
-                                    height: 70, // Adjust the height as needed
-                                    child: Card(
-                                      elevation: 2,
-                                      child: ListTile(
-                                        title: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(user.matric),
-                                                Text(user.name),
-                                              ],
-                                            ),
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(user.major),
-                                                // Add other fields as needed
-                                              ],
-                                            ),
-                                          ],
-                                        ),
+                      child: SizedBox(
+                        height: 100, // Reduced height
+                        child: Card(
+                          elevation: 2,
+                          child: ListTile(
+                            title: Text(
+                              'Matric No: ${user.matric}', // Set user.matric as the title
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black, // Set text color to black
+                                fontSize: 16, // Adjust font size
+                              ),
+                            ),
+                            subtitle: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Student Name: ${user.name}',
+                                      style: const TextStyle(
+                                        color: Colors.black, // Set text color to black
+                                        fontSize: 16, // Adjust font size
                                       ),
                                     ),
-                                  ),
+                                    // Add additional fields as needed
+                                  ],
                                 ),
-                              ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                     'Major: ${user.major}',
+                                      style: const TextStyle(
+                                        color: Colors.black, // Set text color to black
+                                        fontSize: 14, // Adjust font size
+                                      ),
+                                    ),
+                                    // Add additional fields as needed
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                               const SizedBox(height: 10), // Add spacing between items
                             ],
                           );

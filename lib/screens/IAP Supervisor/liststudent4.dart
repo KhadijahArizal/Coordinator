@@ -1,18 +1,18 @@
-import 'package:coordinator/screens/IAP%20Student%20Details/studentdetails.dart';
+import 'package:coordinator/screens/IAP%20Supervisor/supervisor.dart';
 import 'package:coordinator/screens/navbar.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-class ListStudent2 extends StatefulWidget {
-  const ListStudent2({Key? key}) : super(key: key);
+class ListStudent4 extends StatefulWidget {
+  const ListStudent4({Key? key}) : super(key: key);
 
   @override
-  State<ListStudent2> createState() => _ListStudent2State();
+  State<ListStudent4> createState() => _ListStudent4State();
 }
 
-class _ListStudent2State extends State<ListStudent2> {
+class _ListStudent4State extends State<ListStudent4> {
   late DatabaseReference _iapFormRef;
-  late DatabaseReference _studentDetailsRef;
+  late DatabaseReference _supervisorDetailsRef;
   late List<UserData> _userData = [];
 
   @override
@@ -20,10 +20,10 @@ class _ListStudent2State extends State<ListStudent2> {
     super.initState();
     _iapFormRef =
         FirebaseDatabase.instance.ref().child('Student').child('IAP Form');
-    _studentDetailsRef = FirebaseDatabase.instance
+    _supervisorDetailsRef = FirebaseDatabase.instance
         .ref()
         .child('Student')
-        .child('Student Details');
+        .child('Supervisor Details');
     _fetchUserData();
   }
 
@@ -31,39 +31,32 @@ class _ListStudent2State extends State<ListStudent2> {
     try {
       DataSnapshot iapSnapshot =
           await _iapFormRef.once().then((event) => event.snapshot);
-      DataSnapshot studentSnapshot =
-          await _studentDetailsRef.once().then((event) => event.snapshot);
+      DataSnapshot supervisorSnapshot =
+          await _supervisorDetailsRef.once().then((event) => event.snapshot);
 
       Map<dynamic, dynamic>? iapData =
           iapSnapshot.value as Map<dynamic, dynamic>?;
-      Map<dynamic, dynamic>? studentData =
-          studentSnapshot.value as Map<dynamic, dynamic>?;
+      Map<dynamic, dynamic>? supervisorData =
+          supervisorSnapshot.value as Map<dynamic, dynamic>?;
 
-      if (iapData != null && studentData != null) {
+      if (iapData != null && supervisorData != null) {
         iapData.forEach((key, value) {
-          if (value is Map<dynamic, dynamic> && studentData.containsKey(key)) {
+          if (value is Map<dynamic, dynamic> && supervisorData.containsKey(key)) {
             String matric = value['Matric'] ?? '';
-            String salutation = value['Salutation'] ?? '';
             String name = value['Name'] ?? '';
-            String major = studentData[key]['Major'] ?? '';
-            String ic = studentData[key]['IC or Passport'] ?? '';
-            String email = studentData[key]['Email'] ?? '';
-            String contactno = studentData[key]['Contact No'] ?? '';
-            String citizenship = studentData[key]['Citizenship'] ?? '';
-            String address = studentData[key]['Address'] ?? '';
+            String svname = supervisorData[key]['Supervisor Name'] ?? '';
+            String email = supervisorData[key]['Email'] ?? '';
+            String contact = supervisorData[key]['Contact No'] ?? '';
             
-
             UserData userData = UserData(
               matric: matric,
-              salutation: salutation,
               name: name,
-              major: major,
-              ic: ic,
+              svname: svname,
               email: email,
-              contactno: contactno,
-              citizenship: citizenship,
-              address: address,
+              contact: contact,
+
               
+             
             );
             _userData.add(userData);
           }
@@ -80,7 +73,7 @@ class _ListStudent2State extends State<ListStudent2> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('List of Students Details'),
+        title: const Text('List of Supervisor'),
         centerTitle: true,
         backgroundColor: const Color.fromRGBO(0, 146, 143, 10),
       ),
@@ -119,13 +112,13 @@ class _ListStudent2State extends State<ListStudent2> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text('Student Name: ${_userData[index].name}'),
-                                    //Text('Company: ${_userData[index].comname}'),
+                                    //Text('Supervisor Name: ${_userData[index].comname}'),
                                   ],
                                 ),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text('Major: ${_userData[index].major}'),
+                                    Text('Supervisor Name: ${_userData[index].svname}'),
                                     // Add more details as needed
                                   ],
                                 ),
@@ -137,17 +130,13 @@ class _ListStudent2State extends State<ListStudent2> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => StudentDetails(
+                              builder: (context) => SupervisorDetails(
                                 matric: _userData[index].matric,
-                                salutation: _userData[index].salutation,
-                                name: _userData[index].name,
-                                major: _userData[index].major,
-                                ic: _userData[index].ic,
+                                svname: _userData[index].svname,
                                 email: _userData[index].email,
-                                contactno: _userData[index].contactno,
-                                citizenship: _userData[index].citizenship,
-                                address: _userData[index].address,
-                               
+                                contact: _userData[index].contact,
+                              
+                                
                               ),
                             ),
                           );
@@ -166,24 +155,20 @@ class _ListStudent2State extends State<ListStudent2> {
 
 class UserData {
   final String matric;
-  final String salutation;
   final String name;
-  final String major;
-  final String ic;
+  final String svname;
   final String email;
-  final String contactno; 
-  final String citizenship; 
-  final String address; 
+  final String contact;
+ 
+ 
 
   UserData({
     required this.matric,
-   required this.salutation,
     required this.name,
-    required this.major,
-    required this.ic,
+    required this.svname,
     required this.email,
-    required this.contactno,
-    required this.citizenship,
-    required this.address,
+    required this.contact,
+    
+   
   });
 }

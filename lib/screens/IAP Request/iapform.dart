@@ -43,6 +43,7 @@ class IAPForm extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Student IAP Form - Matric No: $matric'),
+        backgroundColor: const Color.fromRGBO(0, 146, 143, 10),
       ),
       
       body: Container(
