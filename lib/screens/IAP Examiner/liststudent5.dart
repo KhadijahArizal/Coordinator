@@ -284,13 +284,42 @@ class _AssignExaminerState extends State<AssignExaminer> {
                         const SizedBox(height: 20),
                         DataTable(
                           columns: const [
-                            DataColumn(label: Text('Matric No')),
-                            DataColumn(label: Text('Name')),
-                            DataColumn(label: Text('Major')),
-                            DataColumn(label: Text('Zone')),
-                            DataColumn(label: Text('Examiner')),
-                            DataColumn(label: Text('Examiner Valid Email')),
-                            // Add more DataColumn as needed
+                            DataColumn(
+                              label: Text(
+                                'Matric No',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'Name',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'Major',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'Zone',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'Examiner',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'Examiner Valid Email',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
                           ],
                           rows: userData.map<DataRow>((user) {
                             return DataRow(cells: [
@@ -378,7 +407,8 @@ class _AssignExaminerState extends State<AssignExaminer> {
                                           hintText:
                                               'Enter valid examiner email',
                                           hintStyle: TextStyle(
-                                            color: Colors.blueAccent, // Change the color as per your requirement
+                                            color: Colors
+                                                .blueAccent, // Change the color as per your requirement
                                           ),
                                         ),
                                       );

@@ -29,8 +29,7 @@ class ListStudent8 extends StatefulWidget {
 class _ListStudent8State extends State<ListStudent8> {
   late DatabaseReference _ref;
   late Future<DataSnapshot> _dataSnapshotFuture;
-  List<UserData> userTiles = []; 
-  
+  List<UserData> userTiles = [];
 
   @override
   void initState() {
@@ -48,16 +47,15 @@ class _ListStudent8State extends State<ListStudent8> {
     }
   }
 
- Future<void> downloadExcel(List<UserData> users) async {
-  try {
-    await GenerateExcel.downloadExcel(users , context); // Adjust this call if context is not needed here
-  } catch (e) {
-    // Handle any potential errors
-    print('Error downloading Excel: $e');
+  Future<void> downloadExcel(List<UserData> users) async {
+    try {
+      await GenerateExcel.downloadExcel(
+          users, context); // Adjust this call if context is not needed here
+    } catch (e) {
+      // Handle any potential errors
+      print('Error downloading Excel: $e');
+    }
   }
-}
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -274,11 +272,16 @@ class _ListStudent8State extends State<ListStudent8> {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            List<UserData> users = _ListStudent8State().userTiles;
+                            List<UserData> users =
+                                _ListStudent8State().userTiles;
 
-          // Adjusting the method call with required arguments
-          GenerateExcel.downloadExcel(users, context);
+                            // Adjusting the method call with required arguments
+                            GenerateExcel.downloadExcel(users, context);
                           },
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Colors.blue), // Change the button color here
+                          ),
                           child: const Text('Download'),
                         ),
                       ],

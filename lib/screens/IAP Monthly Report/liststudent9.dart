@@ -23,13 +23,10 @@ class _ListStudent9State extends State<ListStudent9> {
   late List<UserDataC> userData = [];
   List<MonthlyReportC> monthlyReports = [];
   List<UserDataC> originalUserData = [];
-  late DatabaseReference _monthlyReportCountsRef;
 
   @override
   void initState() {
     super.initState();
-   // _supervisorRef =
-       // FirebaseDatabase.instance.ref('Student').child('Supervisor Details');
     _iapFormRef =
         FirebaseDatabase.instance.ref().child('Student').child('IAP Form');
     _monthlyReport = FirebaseDatabase.instance
@@ -37,45 +34,30 @@ class _ListStudent9State extends State<ListStudent9> {
         .child('Student')
         .child('Monthly Report');
     _fetchUserData();
-    _monthlyReportCountsRef = FirebaseDatabase.instance
-        .ref()
-        .child('Student')
-        .child('Monthly Report')
-        .child(userId);
   }
 
   Future<void> _fetchUserData() async {
     try {
-      //String supervisorEmail = '${user?.email}';
       DataSnapshot iapSnapshot =
           await _iapFormRef.once().then((event) => event.snapshot);
       DataSnapshot monthlyReportSnapshot =
           await _monthlyReport.once().then((event) => event.snapshot);
-   //   DataSnapshot svReportSnapshot =
-       //   await _supervisorRef.once().then((event) => event.snapshot);
 
       Map<dynamic, dynamic>? iapData =
           iapSnapshot.value as Map<dynamic, dynamic>?;
       Map<dynamic, dynamic>? monthlyReportData =
           monthlyReportSnapshot.value as Map<dynamic, dynamic>?;
-      //Map<dynamic, dynamic>? svReportData =
-         // svReportSnapshot.value as Map<dynamic, dynamic>?;
 
-      if (iapData != null &&
-          monthlyReportData != null) {
+      if (iapData != null && monthlyReportData != null) {
         iapData.forEach((key, value) {
           if (value is Map<dynamic, dynamic> &&
               monthlyReportData.containsKey(key) &&
               iapData.containsKey(key)) {
-            //iap
             String matric = iapData[key]['Matric'] ?? '';
             String name = iapData[key]['Name'] ?? '';
             String studentID = iapData[key]['Student ID'] ?? '';
+            String major = iapData[key]['Major'] ?? '';
 
-            //svemail
-            //String svemail = svReportData[key]['Email'] ?? '';
-
-            //monthly
             List<MonthlyReportC> monthlyReports = [];
             if (monthlyReportData[key]['Reports'] is Map) {
               monthlyReportData[key]['Reports']
@@ -95,7 +77,7 @@ class _ListStudent9State extends State<ListStudent9> {
                 studentID: studentID,
                 matric: matric,
                 name: name,
-               // svemail: svemail,
+                major: major,
                 monthlyReports: monthlyReports,
                 finalReport: FinalReportC(
                     date: '',
@@ -113,7 +95,6 @@ class _ListStudent9State extends State<ListStudent9> {
             print('userData: $userData');
           }
         });
-        await _calculateAndStoreReportCounts();
       }
 
       setState(() {});
@@ -129,44 +110,40 @@ class _ListStudent9State extends State<ListStudent9> {
         .toList();
   }
 
-  Future<void> _calculateAndStoreReportCounts() async {
-    int totalStudents = userData.length;
-
-    int pendingCount = 0;
-    int approvedCount = 0;
-    int rejectedCount = 0;
-
-    for (UserDataC user in userData) {
-      for (MonthlyReportC report in user.monthlyReports) {
-        if (report.status == 'Pending') {
-          pendingCount++;
-        } else if (report.status == 'Approved') {
-          approvedCount++;
-        } else if (report.status == 'Rejected') {
-          rejectedCount++;
-        }
-      }
-    }
-
-    try {
-      await _monthlyReportCountsRef.set({
-        'totalStudents': totalStudents,
-        'pendingCount': pendingCount,
-        'approvedCount': approvedCount,
-        'rejectedCount': rejectedCount,
-      });
-
-      print('Monthly report counts stored successfully.$totalStudents $pendingCount $approvedCount $rejectedCount');
-    } catch (error) {
-      print('Error storing monthly report counts: $error');
-    }
-  }
-
   Widget _name({required String name}) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             name,
+            style: const TextStyle(
+              color: Colors.black87,
+              fontSize: 15,
+              fontFamily: 'Futura',
+            ),
+          )
+        ],
+      );
+
+
+      Widget _major({required String major}) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            major,
+            style: const TextStyle(
+              color: Colors.black87,
+              fontSize: 15,
+              fontFamily: 'Futura',
+            ),
+          )
+        ],
+      );
+
+  Widget _matricNo({required String matricNo}) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            matricNo,
             style: const TextStyle(
               color: Colors.black,
               fontSize: 17,
@@ -177,32 +154,18 @@ class _ListStudent9State extends State<ListStudent9> {
         ],
       );
 
-  Widget _matricNo({required String matricNo}) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            matricNo,
-            style: const TextStyle(
-              color: Colors.black87,
-              fontSize: 15,
-              fontFamily: 'Futura',
-            ),
-          )
-        ],
-      );
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Final Report'),
+        title: const Text('Monthly Report'),
         centerTitle: true,
         backgroundColor: const Color.fromRGBO(0, 146, 143, 10),
       ),
       drawer: NavBar(),
       body: SafeArea(
         child: Container(
-          alignment: Alignment.topCenter,
+            alignment: Alignment.topCenter,
             padding: const EdgeInsets.all(20),
             width: double.infinity,
             height: double.infinity,
@@ -239,6 +202,7 @@ class _ListStudent9State extends State<ListStudent9> {
                                 name: 'No student found',
                                 matric: '',
                                 studentID: '',
+                                major: '',
                                 //svemail: '',
                                 monthlyReports: [],
                                 finalReport: FinalReportC(
@@ -270,44 +234,100 @@ class _ListStudent9State extends State<ListStudent9> {
                     const SizedBox(
                       height: 15,
                     ),
-                    Expanded(
-                      child: userData.isNotEmpty
-                          ? ListView.separated(
-                              itemCount: userData.length,
-                              itemBuilder: (context, index) => GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => S_Details(
-                                        name: userData[index].name,
-                                        matric: userData[index].matric,
-                                        studentID: userData[index].studentID,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: ListTile(
-                                  contentPadding: const EdgeInsets.all(1),
-                                  title: _name(name: userData[index].name),
-                                  subtitle: _matricNo(
-                                    matricNo: userData[index].matric,
+                    SingleChildScrollView(
+                      child: Column(
+                        children: userData.map((user) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => S_Details(
+                                    name: user.name,
+                                    matric: user.matric,
+                                    studentID: user.studentID,
                                   ),
                                 ),
-                              ),
-                              separatorBuilder: (context, index) =>
-                                  const Divider(
-                                height: 1,
-                                thickness: 1,
-                                color: Colors.black26,
-                              ),
-                            )
-                          : const Center(
-                              child: Text(
-                                'No students found.',
-                                style: TextStyle(fontSize: 20),
+                              );
+                            },
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const Text(
+                                                'Matric No:',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14,
+                                                  fontFamily: 'Futura',
+                                                ),
+                                              ),
+                                              const SizedBox(height: 5),
+                                              _matricNo(matricNo: user.matric),
+                                            ],
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const Text(
+                                                'Name:',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14,
+                                                  fontFamily: 'Futura',
+                                                ),
+                                              ),
+                                              const SizedBox(height: 5),
+                                              _name(name: user.name),
+                                            ],
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const Text(
+                                                'Major:',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14,
+                                                  fontFamily: 'Futura',
+                                                ),
+                                              ),
+                                              const SizedBox(height: 5),
+                                              _major(major: user.major),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const Divider(
+                                      color: Colors.grey,
+                                      thickness: 1,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
+                          );
+                        }).toList(),
+                      ),
                     ),
                   ],
                 ))),

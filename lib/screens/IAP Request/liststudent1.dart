@@ -163,7 +163,7 @@ class _ListStudent1State extends State<ListStudent1> {
               color: Colors.white.withOpacity(0.5), // Add shadow color
               spreadRadius: 5,
               blurRadius: 7,
-              offset: Offset(0, 3), // changes position of shadow
+              offset: const Offset(0, 3), // changes position of shadow
             ),
           ],
         ),

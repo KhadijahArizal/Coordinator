@@ -28,6 +28,14 @@ class _ListStudent6State extends State<ListStudent6> {
     _fetchUserData();
   }
 
+ List<UserData> _filterUserData(String searchValue) {
+    return _userData
+        .where((user) =>
+            user.matric.toLowerCase().contains(searchValue.toLowerCase()))
+        .toList();
+  }
+
+
   Future<void> _fetchUserData() async {
     try {
       DataSnapshot iapSnapshot =

@@ -131,7 +131,7 @@ class _NavBarState extends State<NavBar> {
             },
           ),
            ListTile(
-            leading: const Icon(Icons.people_alt_outlined),
+            leading: const Icon(Icons.people),
              iconColor:const Color.fromRGBO(0, 146, 143, 10),
             title: const Text('Add Examiner'),
             onTap: () => {
@@ -178,7 +178,7 @@ class _NavBarState extends State<NavBar> {
           ListTile(
             leading: const Icon(Icons.exit_to_app_rounded),
            iconColor:const Color.fromRGBO(0, 146, 143, 10),
-            title: const Text('Quit'),
+            title: const Text('Sign Out'),
             onTap: () => {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => const HomePage()))

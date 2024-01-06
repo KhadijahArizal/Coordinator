@@ -141,25 +141,25 @@ class _S_DetailsState extends State<S_Details> {
       backgroundColor: const Color.fromRGBO(244, 243, 243, 1),
       appBar: AppBar(
         title: const Text(
-          'Student Details',
+          'Monthly Report',
           style: TextStyle(
-              color: Colors.black87,
-              fontSize: 30,
-              fontWeight: FontWeight.w800,
+              color: Colors.white,
+              //fontSize: 30,
+              //fontWeight: FontWeight.w800,
               fontFamily: 'Futura'),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromRGBO(0, 146, 143, 10),
         elevation: 0,
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         iconTheme: const IconThemeData(
           color: Color.fromRGBO(0, 146, 143, 10),
-          size: 30,
+          size: 20,
         ),
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
               icon: const Icon(Icons.arrow_back_ios_new_rounded,
-                  color: Color.fromRGBO(0, 146, 143, 10), size: 30),
+                  color: Colors.white, size: 30),
               onPressed: () {
                 Navigator.pop(context);
               },

@@ -19,6 +19,7 @@ class UserDataC {
   final String matric;
   final String name;
   final String studentID;
+  final String major;
   //final String svemail;
   final List<MonthlyReportC> monthlyReports;
   final FinalReportC finalReport;
@@ -27,9 +28,10 @@ class UserDataC {
     required this.studentID,
     required this.matric,
     required this.name,
+     required this.major,
    // required this.svemail,
     required this.monthlyReports,
-    required this.finalReport,
+    required this.finalReport, 
   });
 }
 
