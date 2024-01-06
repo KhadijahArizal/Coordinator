@@ -14,6 +14,7 @@ class _ListStudent4State extends State<ListStudent4> {
   late DatabaseReference _iapFormRef;
   late DatabaseReference _supervisorDetailsRef;
   late List<UserData> _userData = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -63,25 +64,50 @@ class _ListStudent4State extends State<ListStudent4> {
         });
       }
 
-      setState(() {});
+      setState(() {
+        _isLoading = false; // Update loading state once data is fetched
+      });
     } catch (error) {
       print('Error fetching data: $error');
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('List of Supervisor'),
-        centerTitle: true,
         backgroundColor: const Color.fromRGBO(0, 146, 143, 10),
+        title: const Text(
+          'Supervisor',
+        ),
       ),
        drawer: NavBar(),
-    body: Center(
-      child: _userData.isNotEmpty
-          ? Padding(
-              padding: const EdgeInsets.only(top: 2.0), // Adjust the top padding as needed
+     body: Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: const AssetImage('images/iiumlogo.png'), // Add your desired image
+              fit: BoxFit.cover,
+              colorFilter: ColorFilter.mode(
+                Colors.white.withOpacity(0.2),
+                BlendMode.dstATop,
+              ),
+            ),
+            borderRadius: BorderRadius.circular(10.0), // Add border radius
+            boxShadow: [
+              BoxShadow(
+                color: Colors.white.withOpacity(0.5), // Add shadow color
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: const Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+        ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 2.0),
               child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.8,
                 child: ListView.builder(
@@ -135,8 +161,6 @@ class _ListStudent4State extends State<ListStudent4> {
                                 svname: _userData[index].svname,
                                 email: _userData[index].email,
                                 contact: _userData[index].contact,
-                              
-                                
                               ),
                             ),
                           );
@@ -146,12 +170,18 @@ class _ListStudent4State extends State<ListStudent4> {
                   },
                 ),
               ),
-            )
-          : const Center(child: CircularProgressIndicator()),
+            ),
+          ),
+          if (_isLoading) // Conditionally show CircularProgressIndicator
+            const Center(
+              child: CircularProgressIndicator(),
+            ),
+        ],
       ),
     );
   }
 }
+
 
 class UserData {
   final String matric;

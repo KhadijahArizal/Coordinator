@@ -3,6 +3,48 @@ import 'package:coordinator/screens/navbar.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
+
+
+class UserData {
+  final String matric;
+  final String name;
+  final String comname;
+  final String zone;
+  final String address;
+  final String postcode;
+  final String industry;
+  final String allowance;
+  final String duration;
+  final String sector;
+  final String start;
+  final String end;
+  final String offer;
+  String status;
+  final String studentID;
+  final Function(String) onActive;
+  final Function(String) onInactive;
+
+  UserData({
+    required this.matric,
+    required this.name,
+    required this.comname,
+    required this.zone,
+    required this.address,
+    required this.postcode,
+    required this.industry,
+    required this.allowance,
+    required this.duration,
+    required this.sector,
+    required this.start,
+    required this.end,
+    required this.offer,
+    required this.status,
+    required this.onActive,
+    required this.onInactive,
+    required this.studentID,
+  });
+}
+
 class ListStudent3 extends StatefulWidget {
   const ListStudent3({Key? key}) : super(key: key);
 
@@ -13,7 +55,7 @@ class ListStudent3 extends StatefulWidget {
 class _ListStudent3State extends State<ListStudent3> {
   late DatabaseReference _iapFormRef;
   late DatabaseReference _companyDetailsRef;
-  late List<UserData> _userData = [];
+  late Future<List<UserData>> _userFinalFuture;
 
   @override
   void initState() {
@@ -24,10 +66,11 @@ class _ListStudent3State extends State<ListStudent3> {
         .ref()
         .child('Student')
         .child('Company Details');
-    _fetchUserData();
+     _userFinalFuture = _fetchFinalData();
   }
 
-  Future<void> _fetchUserData() async {
+  Future<List<UserData>> _fetchFinalData() async {
+    List<UserData> userDataList = [];
     try {
       DataSnapshot iapSnapshot =
           await _iapFormRef.once().then((event) => event.snapshot);
@@ -55,8 +98,10 @@ class _ListStudent3State extends State<ListStudent3> {
             String start = companyData[key]['Start Date'] ?? '';
             String end = companyData[key]['End Date'] ?? '';
             String offer = companyData[key]['Offer Letter'] ?? '';
+            String status = value['Status'] ?? '';
+            String studentID = key as String? ?? '';
 
-            UserData userData = UserData(
+            UserData user = UserData(
               matric: matric,
               name: name,
               comname: comname,
@@ -70,136 +115,169 @@ class _ListStudent3State extends State<ListStudent3> {
               start: start,
               end: end,
               offer: offer,
-            );
-            _userData.add(userData);
+              status: status,
+              studentID: studentID,
+              onActive: (String) {},
+              onInactive: (String) {},
+           );
+
+            userDataList.add(user);
           }
         });
       }
-
-      setState(() {});
-    } catch (error) {
-      print('Error fetching data: $error');
+    } catch (e) {
+      print('Error fetching data: $e');
     }
+
+    return userDataList;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('List of Students Placement'),
-        centerTitle: true,
         backgroundColor: const Color.fromRGBO(0, 146, 143, 10),
+        centerTitle: true,
+        title: const Text('Placement',
+        ),
       ),
-       drawer: NavBar(),
-    body: Center(
-      child: _userData.isNotEmpty
-          ? Padding(
-              padding: const EdgeInsets.only(top: 2.0), // Adjust the top padding as needed
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: ListView.builder(
-                  padding: EdgeInsets.zero,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: _userData.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      elevation: 2,
-                      margin: const EdgeInsets.all(8),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.all(16),
-                        title: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Matric: ${_userData[index].matric}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
+      drawer: NavBar(),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: const AssetImage(
+                'images/iiumlogo.png'), // Add your desired image
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(
+              Colors.white.withOpacity(0.2),
+              BlendMode.dstATop,
+            ),
+          ),
+          //border: Border.all(color: Colors.black), // Add a border
+          borderRadius: BorderRadius.circular(10.0), // Add border radius
+          boxShadow: [
+            BoxShadow(
+              color: Colors.white.withOpacity(0.5), // Add shadow color
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        margin: const EdgeInsets.only(top: 20), // Adjust the top margin as needed
+        child: FutureBuilder<List<UserData>>(
+          future: _userFinalFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(child: Text('No data available.'));
+            } else {
+              return Center(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: ListView(
+                    children: snapshot.data!.map((user) {
+                      return Column(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                builder: (context) => PlacementDetails(
+                                  matric: user.matric,
+                                  comname: user.comname,
+                                  zone: user.zone,
+                                  address: user.address,
+                                  postcode: user.postcode,
+                                  industry: user.industry,
+                                  allowance: user.allowance,
+                                  duration: user.duration,
+                                  sector: user.sector,
+                                  start: user.start,
+                                  end: user.end,
+                                  offer: user.offer,
+                                  status: user.status, 
+                                    studentID: user.studentID,
+                                    onActive: (String ) {  }, 
+                                    onInactive: (String ) {  }, 
+                                    onUpdateStatus: (String ) {  },
+                               
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Center(
+                              child: SizedBox(
+                                height: 100, // Reduced height
+                                child: Card(
+                                  elevation: 2,
+                                  child: ListTile(
+                                    title: Text(
+                                      'Matric No: ${user.matric}',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    subtitle: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Student Name: ${user.name}',
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                            // Add additional fields as needed
+                                          ],
+                                        ),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Company: ${user.comname}',
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                              ),
+                                            ),
+                                            Text(
+                                              'Zone: ${user.zone}',
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                              ),
+                                            ),
+                                            // Add additional fields as needed
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                            const SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Name: ${_userData[index].name}'),
-                                    Text('Company: ${_userData[index].comname}'),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Zone: ${_userData[index].zone}'),
-                                    // Add more details as needed
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PlacementDetails(
-                                matric: _userData[index].matric,
-                                comname: _userData[index].comname,
-                                zone: _userData[index].zone,
-                                address: _userData[index].address,
-                                postcode: _userData[index].postcode,
-                                industry: _userData[index].industry,
-                                allowance: _userData[index].allowance,
-                                duration: _userData[index].duration,
-                                sector: _userData[index].sector,
-                                start: _userData[index].start,
-                                end: _userData[index].end,
-                                offer: _userData[index].offer,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
+                          ),
+                          const SizedBox(height: 10), // Add spacing between items
+                        ],
+                      );
+                    }).toList(),
+                  ),
                 ),
-              ),
-            )
-          : const Center(child: CircularProgressIndicator()),
+              );
+            }
+          },
+        ),
       ),
     );
   }
-}
-
-class UserData {
-  final String matric;
-  final String name;
-  final String comname;
-  final String zone;
-  final String address;
-  final String postcode;
-  final String industry;
-  final String allowance;
-  final String duration;
-  final String sector;
-  final String start;
-  final String end;
-  final String offer;
-
-  UserData({
-    required this.matric,
-    required this.name,
-    required this.comname,
-    required this.zone,
-    required this.address,
-    required this.postcode,
-    required this.industry,
-    required this.allowance,
-    required this.duration,
-    required this.sector,
-    required this.start,
-    required this.end,
-    required this.offer,
-  });
 }

@@ -1,30 +1,30 @@
-import 'package:coordinator/screens/IAP%20Student%20Details/studentdetails.dart';
+import 'package:coordinator/screens/IAP%20Final%20Report/finalreport.dart';
 import 'package:coordinator/screens/navbar.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-class ListStudent2 extends StatefulWidget {
-  const ListStudent2({Key? key}) : super(key: key);
+class ListStudent7 extends StatefulWidget {
+  const ListStudent7({Key? key}) : super(key: key);
 
   @override
-  State<ListStudent2> createState() => _ListStudent2State();
+  State<ListStudent7> createState() => _ListStudent7State();
 }
 
-class _ListStudent2State extends State<ListStudent2> {
+class _ListStudent7State extends State<ListStudent7> {
   late DatabaseReference _iapFormRef;
-  late DatabaseReference _studentDetailsRef;
+  late DatabaseReference _finalreportDetailsRef;
   late List<UserData> _userData = [];
-   bool _isLoading = true;
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
     _iapFormRef =
         FirebaseDatabase.instance.ref().child('Student').child('IAP Form');
-    _studentDetailsRef = FirebaseDatabase.instance
+    _finalreportDetailsRef = FirebaseDatabase.instance
         .ref()
         .child('Student')
-        .child('Student Details');
+        .child('Final Report');
     _fetchUserData();
   }
 
@@ -32,39 +32,36 @@ class _ListStudent2State extends State<ListStudent2> {
     try {
       DataSnapshot iapSnapshot =
           await _iapFormRef.once().then((event) => event.snapshot);
-      DataSnapshot studentSnapshot =
-          await _studentDetailsRef.once().then((event) => event.snapshot);
+      DataSnapshot finalreportSnapshot =
+          await _finalreportDetailsRef.once().then((event) => event.snapshot);
 
       Map<dynamic, dynamic>? iapData =
           iapSnapshot.value as Map<dynamic, dynamic>?;
-      Map<dynamic, dynamic>? studentData =
-          studentSnapshot.value as Map<dynamic, dynamic>?;
+      Map<dynamic, dynamic>? finalreportData =
+          finalreportSnapshot.value as Map<dynamic, dynamic>?;
 
-      if (iapData != null && studentData != null) {
+      if (iapData != null && finalreportData != null) {
         iapData.forEach((key, value) {
-          if (value is Map<dynamic, dynamic> && studentData.containsKey(key)) {
+          if (value is Map<dynamic, dynamic> && finalreportData.containsKey(key)) {
             String matric = value['Matric'] ?? '';
-            //String salutation = value['Salutation'] ?? '';
             String name = value['Name'] ?? '';
-            String major = studentData[key]['Major'] ?? '';
-            String ic = studentData[key]['IC or Passport'] ?? '';
-            String email = studentData[key]['Email'] ?? '';
-            String contactno = studentData[key]['Contact No'] ?? '';
-            String citizenship = studentData[key]['Citizenship'] ?? '';
-            String address = studentData[key]['Address'] ?? '';
+            String title = finalreportData[key]['Report Title'] ?? '';
+            String namefile = finalreportData[key]['File Name'] ?? '';
+            String file = finalreportData[key]['File'] ?? '';
+            String date = finalreportData[key]['Date'] ?? '';
+            String status = finalreportData[key]['Status'] ?? '';
             
-
             UserData userData = UserData(
               matric: matric,
-              //salutation: salutation,
               name: name,
-              major: major,
-              ic: ic,
-              email: email,
-              contactno: contactno,
-              citizenship: citizenship,
-              address: address,
+              title: title,
+              namefile: namefile,
+              file: file,
+              date: date,
+              status: status,
+
               
+             
             );
             _userData.add(userData);
           }
@@ -83,36 +80,13 @@ class _ListStudent2State extends State<ListStudent2> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(0, 146, 143, 10),
+        title: const Text('Final Report'),
         centerTitle: true,
-        title: const Text(
-          'Student Details',
-        ),
+        backgroundColor: const Color.fromRGBO(0, 146, 143, 10),
       ),
-     drawer: NavBar(),
+       drawer: NavBar(),
     body: Stack(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: const AssetImage('images/iiumlogo.png'), // Add your desired image
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Colors.white.withOpacity(0.2),
-                BlendMode.dstATop,
-              ),
-            ),
-            borderRadius: BorderRadius.circular(10.0), // Add border radius
-            boxShadow: [
-              BoxShadow(
-                color: Colors.white.withOpacity(0.5), // Add shadow color
-                spreadRadius: 5,
-                blurRadius: 7,
-                offset: const Offset(0, 3), // changes position of shadow
-              ),
-            ],
-          ),
-        ),
+        children: [
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
@@ -147,12 +121,14 @@ class _ListStudent2State extends State<ListStudent2> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text('Student Name: ${_userData[index].name}'),
+                                    //Text('Supervisor Name: ${_userData[index].comname}'),
                                   ],
                                 ),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text('Major: ${_userData[index].major}'),
+                                    Text('File Name: ${_userData[index].namefile}'),
+                                    // Add more details as needed
                                   ],
                                 ),
                               ],
@@ -163,17 +139,14 @@ class _ListStudent2State extends State<ListStudent2> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => StudentDetails(
-                            matric: _userData[index].matric,
-                            //salutation: _userData[index].salutation,
-                            name: _userData[index].name,
-                            major: _userData[index].major,
-                            ic: _userData[index].ic,
-                            email: _userData[index].email,
-                            contactno: _userData[index].contactno,
-                            citizenship: _userData[index].citizenship,
-                            address: _userData[index].address,
-                              ),
+                              builder: (context) => FinalReportDetails(
+                                matric: _userData[index].matric,
+                                title: _userData[index].title,
+                                namefile: _userData[index].namefile,
+                                file: _userData[index].file,
+                                date: _userData[index].date,
+                                status: _userData[index].status
+                               ),
                             ),
                           );
                         },
@@ -185,7 +158,7 @@ class _ListStudent2State extends State<ListStudent2> {
             ),
           ),
           if (_isLoading) // Conditionally show CircularProgressIndicator
-            Center(
+            const Center(
               child: CircularProgressIndicator(),
             ),
         ],
@@ -193,26 +166,26 @@ class _ListStudent2State extends State<ListStudent2> {
     );
   }
 }
+
 class UserData {
   final String matric;
-  //final String salutation;
   final String name;
-  final String major;
-  final String ic;
-  final String email;
-  final String contactno; 
-  final String citizenship; 
-  final String address; 
+  final String title;
+  final String namefile;
+  final String file;
+  final String date;
+  final String status;
+ 
+ 
 
   UserData({
     required this.matric,
-   //required this.salutation,
     required this.name,
-    required this.major,
-    required this.ic,
-    required this.email,
-    required this.contactno,
-    required this.citizenship,
-    required this.address,
+    required this.title,
+    required this.namefile,
+    required this.file,
+    required this.date,
+    required this.status,
+   
   });
 }

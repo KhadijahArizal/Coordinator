@@ -1,5 +1,7 @@
 import 'package:coordinator/screens/auth.dart';
+import 'package:coordinator/screens/profilepage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:coordinator/screens/navbar.dart';
@@ -13,14 +15,30 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-
-
   @override
   Widget build(BuildContext context) {
     User? user = FirebaseAuth.instance.currentUser;
 
+    void onFirebaseOpenedApp() {
+      FirebaseMessaging.onMessageOpenedApp.listen((event) {
+        print('Notification');
+        print(event.notification!.title);
+      });
+    }
+
+    void firebaseOnMessage() {
+      FirebaseMessaging.onMessage.listen((message) {
+        if (message != null) {
+          final title = message.notification!.title;
+          final body = message.notification!.body;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Title: $title, Body: $body')),
+          );
+        }
+      });
+    }
+
     return Scaffold(
-      
       backgroundColor: const Color.fromRGBO(244, 243, 243, 1),
       appBar: AppBar(
         backgroundColor: Colors.white70,
@@ -34,7 +52,6 @@ class _DashboardState extends State<Dashboard> {
       drawer: NavBar(),
       body: SafeArea(
         child: Container(
-          
           padding: const EdgeInsets.all(20),
           width: double.infinity,
           decoration: BoxDecoration(
@@ -50,7 +67,8 @@ class _DashboardState extends State<Dashboard> {
           child: Column(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -80,17 +98,27 @@ class _DashboardState extends State<Dashboard> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        CircleAvatar(
-                          radius: 20,
-                          backgroundImage: imageUrl != null
-                          ?NetworkImage(imageUrl!)
-                          :null,
-                          child: imageUrl == null
-                          ? const Icon(
-                            Icons.account_circle,
-                            size: 30,
-                          )
-                          :Container(),
+                        GestureDetector(
+                          onTap: () {
+                            // Navigate to profile page
+                            Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const ProfilePage()));
+                          },
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage: imageUrl != null
+                                ? NetworkImage(imageUrl!)
+                                : null,
+                            child: imageUrl == null
+                                ? const Icon(
+                                    Icons.account_circle,
+                                    size: 30,
+                                  )
+                                : Container(),
+                          ),
                         ),
                       ],
                     ),
@@ -128,8 +156,7 @@ class _DashboardState extends State<Dashboard> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                 
-              const SizedBox(height: 10),
+                  const SizedBox(height: 10),
                 ],
               ),
             ],
@@ -137,7 +164,5 @@ class _DashboardState extends State<Dashboard> {
         ),
       ),
     );
-    
   }
 }
-

@@ -1,52 +1,50 @@
 import 'package:flutter/material.dart';
 
-class StudentDetails extends StatelessWidget {
-  final String matric;
-  //final String salutation;
-  final String name;
-  final String major;
-  final String ic;
-  final String email;
-  final String contactno; 
-  final String citizenship; 
-  final String address; 
+class MonthlyReportDetails extends StatelessWidget {
+   final String matric;
+  final String title;
+  final String link;
+  final String month;
+  final String week;
+  final String submission;
+  final String feedback;
+  final String status;
+ 
 
-  const StudentDetails({
+  const MonthlyReportDetails({
     required this.matric,
-    //required this.salutation,
-    required this.name,
-    required this.major,
-    required this.ic,
-    required this.email,
-    required this.contactno,
-    required this.citizenship,
-    required this.address,
-
+    required this.title,
+    required this.link,
+    required this.month,
+    required this.week,
+    required this.submission,
+    required this.feedback,
+     required this.status,
+   
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Matric No: $matric'),
+        title: Text('Student Matric No: $matric'),
         centerTitle: true,
         backgroundColor: const Color.fromRGBO(0, 146, 143, 10),
       ),
       body: Container(
-        padding: const EdgeInsets.all(20.0), 
+        padding: const EdgeInsets.all(20.0), // Example padding, adjust as needed
         child: ListView(
           children: [
-            _buildListTile('Matric No' , matric),
-           //_buildListTile('Salutation' , salutation),
-          _buildListTile('Student Name', name),
-          _buildListTile('Major' ,major),
-          _buildListTile('IC/Passport' ,ic),
-          _buildListTile('Email' ,email),
-          _buildListTile('Contact No' ,contactno),
-          _buildListTile('Citizenship' ,citizenship),
-          _buildListTile('Address' ,address),
+
+          _buildListTile('Title' ,title),
+          _buildListTile('Link' ,link),
+          _buildListTile('Month' , month),
+          _buildListTile('Week' , week),
+          _buildListTile('Submission Date' , submission),
+          _buildListTile('Feedback' , feedback),
+          _buildListTile('Status' , status),
          
-       ],
+         ],
         ),
       ),
     );

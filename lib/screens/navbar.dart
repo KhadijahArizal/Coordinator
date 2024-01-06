@@ -1,5 +1,10 @@
 import 'package:coordinator/screens/IAP%20Emergency/lisstudent6.dart';
+import 'package:coordinator/screens/IAP%20Examiner/examiner.dart';
+import 'package:coordinator/screens/IAP%20Examiner/liststudent5.dart';
+import 'package:coordinator/screens/IAP%20Final%20Report/liststudent7.dart';
+import 'package:coordinator/screens/IAP%20Monthly%20Report/liststudent9.dart';
 import 'package:coordinator/screens/IAP%20Placement/liststudent3.dart';
+import 'package:coordinator/screens/IAP%20Result/liststudent8.dart';
 import 'package:coordinator/screens/IAP%20Supervisor/liststudent4.dart';
 import 'package:coordinator/screens/IAP%20Request/liststudent1.dart';
 import 'package:coordinator/screens/IAP%20Student%20Details/liststudent2.dart';
@@ -22,17 +27,26 @@ class _NavBarState extends State<NavBar> {
       backgroundColor: Colors.white,
       child: ListView(
         children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(
+          DrawerHeader(
+            decoration: const BoxDecoration(
               color: Color.fromRGBO(0, 146, 143, 10),
             ),
-            child: Text('i-KICT',
+            child: Row(
+              children: [
+                Image.asset(
+                  'assets/images/iium.png', // Replace with your image path
+                  width: 40, // Set the width as needed
+                  height: 40, // Set the height as needed
+                  // Adjust other properties as needed for alignment, etc.
+                ),
+                const SizedBox(width: 10), const Text('i-KICT',
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 30,
                     fontStyle: FontStyle.italic,
                     fontWeight: FontWeight.w900,
                     fontFamily: 'Futura')),
+        ]),
           ),
           const SizedBox(
             height: 10,
@@ -86,7 +100,7 @@ class _NavBarState extends State<NavBar> {
             title: const Text('Student '),
             onTap: () => {
               Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const ListStudent2()))
+                  MaterialPageRoute(builder: (context) =>  const ListStudent2()))
             },
           ),
           ListTile(
@@ -107,13 +121,22 @@ class _NavBarState extends State<NavBar> {
                   MaterialPageRoute(builder: (context) => const ListStudent4()))
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.people_alt_outlined),
+             iconColor:const Color.fromRGBO(0, 146, 143, 10),
+            title: const Text('Assign Examiner'),
+            onTap: () => {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) =>  const AssignExaminer()))
+            },
+          ),
            ListTile(
             leading: const Icon(Icons.people_alt_outlined),
              iconColor:const Color.fromRGBO(0, 146, 143, 10),
-            title: const Text('Examiner'),
+            title: const Text('Add Examiner'),
             onTap: () => {
               Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const ListStudent4()))
+                  MaterialPageRoute(builder: (context) => AddExaminer()))
             },
           ),
           ListTile(
@@ -126,7 +149,34 @@ class _NavBarState extends State<NavBar> {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.logout_outlined),
+            leading: const Icon(Icons.description_rounded),
+             iconColor:const Color.fromRGBO(0, 146, 143, 10),
+            title: const Text('Monthly Report'),
+            onTap: () => {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) =>  const ListStudent9()))
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.insert_drive_file_rounded),
+             iconColor:const Color.fromRGBO(0, 146, 143, 10),
+            title: const Text('Final Report'),
+            onTap: () => {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const ListStudent7()))
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.dashboard_customize_outlined),
+             iconColor:const Color.fromRGBO(0, 146, 143, 10),
+            title: const Text('Result'),
+            onTap: () => {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const ListStudent8()))
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.exit_to_app_rounded),
            iconColor:const Color.fromRGBO(0, 146, 143, 10),
             title: const Text('Quit'),
             onTap: () => {

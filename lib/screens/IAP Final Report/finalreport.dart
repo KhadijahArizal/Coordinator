@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class EmergencyDetails extends StatelessWidget {
+class FinalReportDetails extends StatelessWidget {
   final String matric;
-  final String emergname;
-  final String contact;
-  final String relay;
-  final String homeadd;
+  final String title;
+  final String namefile;
+  final String file;
+  final String date;
+  final String status;
  
 
-  const EmergencyDetails({
+  const FinalReportDetails({
     required this.matric,
-    required this.emergname,
-    required this.contact,
-    required this.relay,
-    required this.homeadd,
+    required this.title,
+    required this.namefile,
+    required this.file,
+    required this.date,
+    required this.status,
    
   });
 
@@ -30,10 +33,11 @@ class EmergencyDetails extends StatelessWidget {
         child: ListView(
           children: [
 
-          _buildListTile('Name' ,emergname),
-          _buildListTile('Emergency Contact Person' ,contact),
-          _buildListTile('Relationship' , relay),
-          _buildListTile('Home Address' , homeadd),
+          _buildListTile('Report Title' ,title),
+          _buildListTile('File Name' ,namefile),
+          _buildListTile('Date' , date),
+          _buildListTile('Status' , status),
+           _buildListTileWithGDViewer('File', file),
          
          ],
         ),
@@ -86,4 +90,35 @@ Widget _buildListTile(String label, String data) {
     ),
   );
 }
+
+  Widget _buildListTileWithGDViewer(String label, String gdUrl) {
+    return ListTile(
+      title: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 16.0,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      subtitle: InkWell(
+        onTap: () async {
+          // ignore: deprecated_member_use
+          if (await canLaunch(gdUrl)) {
+            // ignore: deprecated_member_use
+            await launch(gdUrl);
+          } else {
+            print('Could not launch $gdUrl');
+          }
+        },
+        child: const Text(
+          'Final Report',
+          style: TextStyle(
+            color: Colors.blue, // Make the link text blue
+            decoration: TextDecoration.underline, // Underline the link text
+          ),
+        ),
+      ),
+    );
+  }
+
 }

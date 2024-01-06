@@ -14,6 +14,7 @@ class _ListStudent6State extends State<ListStudent6> {
   late DatabaseReference _iapFormRef;
   late DatabaseReference _emergencyDetailsRef;
   late List<UserData> _userData = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -65,7 +66,9 @@ class _ListStudent6State extends State<ListStudent6> {
         });
       }
 
-      setState(() {});
+      setState(() {
+        _isLoading = false; // Update loading state once data is fetched
+      });
     } catch (error) {
       print('Error fetching data: $error');
     }
@@ -75,15 +78,40 @@ class _ListStudent6State extends State<ListStudent6> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('List of Emergency Details'),
-        centerTitle: true,
         backgroundColor: const Color.fromRGBO(0, 146, 143, 10),
+        centerTitle: true,
+        title: const Text(
+          'Emergency Contact',
+        ),
       ),
        drawer: NavBar(),
-    body: Center(
-      child: _userData.isNotEmpty
-          ? Padding(
-              padding: const EdgeInsets.only(top: 2.0), // Adjust the top padding as needed
+    body: Stack(
+        children: [
+        Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: const AssetImage('images/iiumlogo.png'), // Add your desired image
+              fit: BoxFit.cover,
+              colorFilter: ColorFilter.mode(
+                Colors.white.withOpacity(0.2),
+                BlendMode.dstATop,
+              ),
+            ),
+            borderRadius: BorderRadius.circular(10.0), // Add border radius
+            boxShadow: [
+              BoxShadow(
+                color: Colors.white.withOpacity(0.5), // Add shadow color
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: const Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+        ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 2.0),
               child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.8,
                 child: ListView.builder(
@@ -139,8 +167,7 @@ class _ListStudent6State extends State<ListStudent6> {
                                 relay: _userData[index].relay,
                                 homeadd: _userData[index].homeadd,
                               
-                                
-                              ),
+                               ),
                             ),
                           );
                         },
@@ -149,8 +176,13 @@ class _ListStudent6State extends State<ListStudent6> {
                   },
                 ),
               ),
-            )
-          : const Center(child: CircularProgressIndicator()),
+            ),
+          ),
+          if (_isLoading) // Conditionally show CircularProgressIndicator
+            const Center(
+              child: CircularProgressIndicator(),
+            ),
+        ],
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:coordinator/screens/IAP%20Request/iapform.dart';
 import 'package:coordinator/screens/navbar.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class UserData {
   final String matric;
@@ -19,6 +20,11 @@ class UserData {
   final String confirmation;
   final String graduation;
   final String partial;
+  String status;
+  final String studentID;
+  final Function(String) onApprove;
+  final Function(String) onPending;
+  final Function(String) onReject;
 
   UserData({
     required this.matric,
@@ -36,6 +42,11 @@ class UserData {
     required this.confirmation,
     required this.graduation,
     required this.partial,
+    required this.status,
+    required this.onApprove,
+    required this.onPending,
+    required this.onReject,
+    required this.studentID,
   });
 }
 
@@ -47,107 +58,132 @@ class ListStudent1 extends StatefulWidget {
 }
 
 class _ListStudent1State extends State<ListStudent1> {
-  late DatabaseReference _ref;
-  late Future<DataSnapshot> _dataSnapshotFuture;
+  late DatabaseReference _iapForm;
+  late Future<List<UserData>> _userFinalFuture;
 
   @override
   void initState() {
     super.initState();
-    _ref = FirebaseDatabase.instance.ref().child('Student').child('IAP Form');
-    _dataSnapshotFuture = _fetchData();
+    _iapForm =
+        FirebaseDatabase.instance.ref().child('Student').child('IAP Form');
+    _userFinalFuture = _fetchFinalData();
   }
 
-  Future<DataSnapshot> _fetchData() async {
+  Future<List<UserData>> _fetchFinalData() async {
+    List<UserData> userDataList = [];
     try {
-      DatabaseEvent event = await _ref.once();
-      return event.snapshot;
-    } catch (error) {
-      throw error;
+      DataSnapshot iapFormSnapshot =
+          await _iapForm.once().then((event) => event.snapshot);
+
+      Map<dynamic, dynamic>? iapFormData =
+          iapFormSnapshot.value as Map<dynamic, dynamic>?;
+
+      if (iapFormData != null) {
+        iapFormData.forEach((key, value) {
+          if (value is Map<dynamic, dynamic>) {
+            // Extracting data fields from Firebase and creating UserData objects
+            String matric = value['Matric'] ?? '';
+            String name = value['Name'] ?? '';
+            String email = value['Email'] ?? '';
+            String major = value['Major'] ?? '';
+            String admission = value['Admission Type'] ?? '';
+            String univ = value['Univ Required Course'] ?? '';
+            String department = value['Department Required Course'] ?? '';
+            String kulliyyah = value['Kulliyyah Required Course'] ?? '';
+            String elective = value['Department Elective Course'] ?? '';
+            String ch = value['CH Current Sem'] ?? '';
+            String total = value['Total CH'] ?? '';
+            String semester = value['Semester'] ?? '';
+            String partial = value['Partial Transcript'] ?? '';
+            String graduation = value['Graduation Audit'] ?? '';
+            String confirmation = value['Confirmation Letter'] ?? '';
+            String status = value['Status'] ?? '';
+            String studentID = key as String? ?? '';
+
+            UserData user = UserData(
+              matric: matric,
+              name: name,
+              email: email,
+              major: major,
+              admission: admission,
+              univ: univ,
+              department: department,
+              kulliyyah: kulliyyah,
+              elective: elective,
+              ch: ch,
+              total: total,
+              semester: semester,
+              confirmation: confirmation,
+              graduation: graduation,
+              partial: partial,
+              status: status,
+              studentID: studentID,
+              onApprove: (String) {},
+              onPending: (String) {},
+              onReject: (String) {},
+            );
+
+            userDataList.add(user);
+          }
+        });
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
     }
+
+    return userDataList;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('List of Students (IAP Form)'),
-        centerTitle: true,
         backgroundColor: const Color.fromRGBO(0, 146, 143, 10),
-
+        centerTitle: true,
+        title: const Text(
+          'Industrial Attachment Programme Form',
+        ),
       ),
       drawer: NavBar(),
       body: Container(
-        margin: const EdgeInsets.only(top: 20), // Adjust the top margin as needed
-        child:FutureBuilder<DataSnapshot>(
-        future: _dataSnapshotFuture,
-        builder: (BuildContext context, AsyncSnapshot<DataSnapshot> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          } else if (!snapshot.hasData || snapshot.data?.value == null) {
-            return const Center(
-              child: Text('No data available.'),
-            );
-          } else {
-            DataSnapshot dataSnapshot = snapshot.data!;
-            Map<dynamic, dynamic>? userData =
-                dataSnapshot.value as Map<dynamic, dynamic>?;
-
-            List<UserData> userTiles = [];
-
-            if (userData != null) {
-              userData.forEach((key, value) {
-                // Process each user's data and create UserData objects accordingly
-                if (value is Map<dynamic, dynamic>) {
-                  String matric = value['Matric'] ?? '';
-                  String name = value['Name'] ?? '';
-                  String email = value['Email'] ?? '';
-                  String major = value['Major'] ?? '';
-                  String admission = value['Admission Type'] ?? '';
-                  String univ = value['Univ Required Course'] ?? '';
-                  String department = value['Department Required Course'] ?? '';
-                  String kulliyyah = value['Kulliyyah Required Course'] ?? '';
-                  String elective = value['Department Elective Course'] ?? '';
-                  String ch = value['CH Current Sem'] ?? '';
-                  String total = value['Total CH'] ?? '';
-                  String semester = value['Semester'] ?? '';
-                  String partial = value['Partial Transcript'] ?? '';
-                  String graduation = value['Graduation Audit'] ?? '';
-                  String confirmation = value['Confirmation Letter'] ?? '';
-
-                  UserData user = UserData(
-                    matric: matric, 
-                    name: name, 
-                    email: email,
-                    major: major,
-                    admission: admission,
-                    univ: univ,
-                    department: department,
-                    kulliyyah: kulliyyah,
-                    elective: elective,
-                    ch: ch,
-                    total: total,
-                    semester: semester, 
-                    partial: partial,
-                    graduation: graduation,
-                    confirmation: confirmation,
-                  );
-                  userTiles.add(user);
-                }
-              });
-            }
-
-             return Center(
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: ListView(
-              children: userTiles.isNotEmpty
-                  ? userTiles.map((user) {
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: const AssetImage(
+                'images/iiumlogo.png'), // Add your desired image
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(
+              Colors.white.withOpacity(0.2),
+              BlendMode.dstATop,
+            ),
+          ),
+          //border: Border.all(color: Colors.black), // Add a border
+          borderRadius: BorderRadius.circular(10.0), // Add border radius
+          boxShadow: [
+            BoxShadow(
+              color: Colors.white.withOpacity(0.5), // Add shadow color
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        margin:
+            const EdgeInsets.only(top: 20), // Adjust the top margin as needed
+        child: FutureBuilder<List<UserData>>(
+          future: _userFinalFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(child: Text('No data available.'));
+            } else {
+              return Center(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: ListView(
+                    children: snapshot.data!.map((user) {
                       return Column(
                         children: [
                           InkWell(
@@ -171,72 +207,81 @@ class _ListStudent1State extends State<ListStudent1> {
                                     confirmation: user.confirmation,
                                     graduation: user.graduation,
                                     partial: user.partial,
-                                    // Pass other fields as needed
+                                    status: user.status,
+                                    studentID: user.studentID,
+                                    onApprove: (String) {},
+                                    onPending: (String) {},
+                                    onReject: (String) {},
+                                    onUpdateStatus: (String) {},
                                   ),
                                 ),
                               );
                             },
                             child: Center(
-                      child: SizedBox(
-                        height: 100, // Reduced height
-                        child: Card(
-                          elevation: 2,
-                          child: ListTile(
-                            title: Text(
-                              'Matric No: ${user.matric}', // Set user.matric as the title
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black, // Set text color to black
-                                fontSize: 16, // Adjust font size
+                              child: SizedBox(
+                                height: 100, // Reduced height
+                                child: Card(
+                                  elevation: 2,
+                                  child: ListTile(
+                                    title: Text(
+                                      'Matric No: ${user.matric}',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    subtitle: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Student Name: ${user.name}',
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                            // Add additional fields as needed
+                                          ],
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Major: ${user.major}',
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                            // Add additional fields as needed
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                            subtitle: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Student Name: ${user.name}',
-                                      style: const TextStyle(
-                                        color: Colors.black, // Set text color to black
-                                        fontSize: 16, // Adjust font size
-                                      ),
-                                    ),
-                                    // Add additional fields as needed
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                     'Major: ${user.major}',
-                                      style: const TextStyle(
-                                        color: Colors.black, // Set text color to black
-                                        fontSize: 14, // Adjust font size
-                                      ),
-                                    ),
-                                    // Add additional fields as needed
-                                  ],
-                                ),
-                              ],
-                            ),
                           ),
-                        ),
-                      ),
-                    ),
+                          const SizedBox(
+                              height: 10), // Add spacing between items
+                        ],
+                      );
+                    }).toList(),
                   ),
-                              const SizedBox(height: 10), // Add spacing between items
-                            ],
-                          );
-                        }).toList()
-                      : [const Center(child: Text('No valid data found.'))],
                 ),
-              ),
-            );
-          }
-        },
+              );
+            }
+          },
+        ),
       ),
-     ) );
+    );
   }
 }
