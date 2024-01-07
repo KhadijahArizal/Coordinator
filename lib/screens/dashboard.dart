@@ -1,10 +1,12 @@
-import 'package:coordinator/screens/auth.dart';
+import 'package:coordinator/screens/firebase_data_fetch.dart';
+import 'package:coordinator/screens/pie_chart_generator.dart';
 import 'package:coordinator/screens/profilepage.dart';
+import 'package:coordinator/screens/navbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:coordinator/screens/navbar.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key, required this.title}) : super(key: key);
@@ -15,28 +17,13 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  final databaseReference = FirebaseDatabase.instance.ref();
+  final FirebaseDataFetcher dataFetcher = FirebaseDataFetcher();
+  final PieChartGenerator chartGenerator = PieChartGenerator();
+
   @override
   Widget build(BuildContext context) {
     User? user = FirebaseAuth.instance.currentUser;
-
-    void onFirebaseOpenedApp() {
-      FirebaseMessaging.onMessageOpenedApp.listen((event) {
-        print('Notification');
-        print(event.notification!.title);
-      });
-    }
-
-    void firebaseOnMessage() {
-      FirebaseMessaging.onMessage.listen((message) {
-        if (message != null) {
-          final title = message.notification!.title;
-          final body = message.notification!.body;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Title: $title, Body: $body')),
-          );
-        }
-      });
-    }
 
     return Scaffold(
       backgroundColor: const Color.fromRGBO(244, 243, 243, 1),
@@ -102,17 +89,18 @@ class _DashboardState extends State<Dashboard> {
                           onTap: () {
                             // Navigate to profile page
                             Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          const ProfilePage()));
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ProfilePage(),
+                              ),
+                            );
                           },
                           child: CircleAvatar(
                             radius: 20,
-                            backgroundImage: imageUrl != null
-                                ? NetworkImage(imageUrl!)
+                            backgroundImage: user?.photoURL != null
+                                ? NetworkImage(user!.photoURL!)
                                 : null,
-                            child: imageUrl == null
+                            child: user?.photoURL == null
                                 ? const Icon(
                                     Icons.account_circle,
                                     size: 30,
@@ -125,9 +113,7 @@ class _DashboardState extends State<Dashboard> {
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 5,
-              ),
+              const SizedBox(height: 5),
               Column(
                 children: <Widget>[
                   Container(
@@ -156,7 +142,34 @@ class _DashboardState extends State<Dashboard> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  const SizedBox(height: 10),
+                  Column(
+                    children: [
+                      // Wrap each section in an Expanded widget to divide the available space evenly
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                            child: _buildChartSection(
+                              'Total Student (IAP FORM)',
+                              dataFetcher.fetchStatusCounts(),
+                            ),
+                          ),
+                          Expanded(
+                            child: _buildChartSection(
+                              'Total Student (Final Report)',
+                              _generateSampleChart2(),
+                            ),
+                          ),
+                          Expanded(
+                            child: _buildChartSection(
+                              'Total Student (Placement)',
+                              _generateSampleChart3(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ],
@@ -164,5 +177,53 @@ class _DashboardState extends State<Dashboard> {
         ),
       ),
     );
+  }
+
+  Widget _buildChartSection(String title, Future<Map<String, int>> chartData) {
+    return Column(
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Container(
+          height: 200,
+          child: FutureBuilder<Map<String, int>>(
+            future: chartData,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                return Center(
+                  child: chartGenerator.generatePieChart(snapshot.data ?? {}),
+                );
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<Map<String, int>> _generateSampleChart2() async {
+    // Replace this with your logic to generate data for the second chart
+    return {
+      'Submitted': 30,
+      'Not Submitted': 20,
+    };
+  }
+
+  Future<Map<String, int>> _generateSampleChart3() async {
+    // Replace this with your logic to generate data for the third chart
+    return {
+      'Confirm': 30,
+      'Yet Confirm': 20,
+    };
   }
 }
