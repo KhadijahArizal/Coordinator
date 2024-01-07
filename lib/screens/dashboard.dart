@@ -4,7 +4,6 @@ import 'package:coordinator/screens/profilepage.dart';
 import 'package:coordinator/screens/navbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -28,6 +27,20 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(244, 243, 243, 1),
       appBar: AppBar(
+        title: const Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              'Coordinator Dashboard',
+              style: TextStyle(
+                color: Colors.black, // Change text color if needed
+                fontSize: 18, // Adjust font size if needed
+                fontWeight: FontWeight.normal, // Add fontWeight if needed
+              ),
+            ),
+            SizedBox(width: 8), // Adjust the width as needed for spacing
+          ],
+        ),
         backgroundColor: Colors.white70,
         elevation: 0,
         systemOverlayStyle: SystemUiOverlayStyle.dark,
@@ -150,20 +163,20 @@ class _DashboardState extends State<Dashboard> {
                         children: [
                           Expanded(
                             child: _buildChartSection(
-                              'Total Student (IAP FORM)',
+                              'Student IAP Form Status',
                               dataFetcher.fetchStatusCounts(),
                             ),
                           ),
                           Expanded(
-                            child: _buildChartSection(
-                              'Total Student (Final Report)',
-                              _generateSampleChart2(),
+                            child: _buildChartSection2(
+                              'Student Placement Status',
+                              dataFetcher.fetchStatusCounts2(),
                             ),
                           ),
                           Expanded(
-                            child: _buildChartSection(
-                              'Total Student (Placement)',
-                              _generateSampleChart3(),
+                            child: _buildChartSection3(
+                              'Final Report Status',
+                              dataFetcher.fetchStatusCounts3(),
                             ),
                           ),
                         ],
@@ -196,7 +209,7 @@ class _DashboardState extends State<Dashboard> {
             future: chartData,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else {
@@ -211,19 +224,67 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Future<Map<String, int>> _generateSampleChart2() async {
-    // Replace this with your logic to generate data for the second chart
-    return {
-      'Submitted': 30,
-      'Not Submitted': 20,
-    };
+  Widget _buildChartSection2(String title, Future<Map<String, int>> chartData) {
+    return Column(
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Container(
+          height: 200,
+          child: FutureBuilder<Map<String, int>>(
+            future: chartData,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                return Center(
+                  child: chartGenerator.generatePieChart2(snapshot.data ?? {}),
+                );
+              }
+            },
+          ),
+        ),
+      ],
+    );
   }
 
-  Future<Map<String, int>> _generateSampleChart3() async {
-    // Replace this with your logic to generate data for the third chart
-    return {
-      'Confirm': 30,
-      'Yet Confirm': 20,
-    };
+  Widget _buildChartSection3(String title, Future<Map<String, int>> chartData) {
+    return Column(
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Container(
+          height: 200,
+          child: FutureBuilder<Map<String, int>>(
+            future: chartData,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                return Center(
+                  child: chartGenerator.generatePieChart3(snapshot.data ?? {}),
+                );
+              }
+            },
+          ),
+        ),
+      ],
+    );
   }
 }
