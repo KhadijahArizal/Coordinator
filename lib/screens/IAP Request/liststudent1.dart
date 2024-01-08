@@ -134,6 +134,19 @@ class _ListStudent1State extends State<ListStudent1> {
     return userDataList;
   }
 
+  Color getStatusColor(String? status) {
+    switch (status) {
+      case 'Pending':
+        return Colors.yellow[700]!;
+      case 'Approved':
+        return Colors.green[700]!;
+      case 'Rejected':
+        return Colors.red[700]!;
+      default:
+        return Colors.black87; // Default color
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -179,14 +192,21 @@ class _ListStudent1State extends State<ListStudent1> {
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return const Center(child: Text('No data available.'));
             } else {
-              return Center(
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  child: ListView(
-                    children: snapshot.data!.map((user) {
-                      return Column(
-                        children: [
-                          InkWell(
+              return Align(
+            alignment: Alignment.topCenter,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.8,
+                  child: DataTable(
+                    columns: [
+                      const DataColumn(label: Text('Matric No')),
+                      const DataColumn(label: Text('Student Name')),
+                      const DataColumn(label: Text('Major')),
+                      const DataColumn(label: Text('Status')),
+                    ],
+                    rows: snapshot.data!.map((user) {
+                      return DataRow(cells: [
+                        DataCell(
+                          GestureDetector(
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -217,70 +237,29 @@ class _ListStudent1State extends State<ListStudent1> {
                                 ),
                               );
                             },
-                            child: Center(
-                              child: SizedBox(
-                                height: 100, // Reduced height
-                                child: Card(
-                                  elevation: 2,
-                                  child: ListTile(
-                                    title: Text(
-                                      'Matric No: ${user.matric}',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    subtitle: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Student Name: ${user.name}',
-                                              style: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                            // Add additional fields as needed
-                                          ],
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Major: ${user.major}',
-                                              style: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                            Text(
-                                              'Status: ${user.status}',
-                                              style: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                            // Add additional fields as needed
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                            child: Text(
+                              user.matric,
+                              style: const TextStyle(
+                                decoration: TextDecoration.underline,
+                                decorationColor:
+                                    Colors.green, // Set underline color to blue
+                                decorationThickness: 2.0,
                               ),
                             ),
                           ),
-                          const SizedBox(
-                              height: 10), // Add spacing between items
-                        ],
-                      );
+                        ),
+                        DataCell(Text(user.name)),
+                        DataCell(Text(user.major)),
+                        DataCell(
+                          Text(
+                            user.status,
+                            style: TextStyle(
+                              color: getStatusColor(user.status),
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ]);
                     }).toList(),
                   ),
                 ),

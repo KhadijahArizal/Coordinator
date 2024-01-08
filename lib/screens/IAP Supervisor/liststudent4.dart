@@ -19,26 +19,18 @@ class _ListStudent4State extends State<ListStudent4> {
   @override
   void initState() {
     super.initState();
-    _iapFormRef =
-        FirebaseDatabase.instance.ref().child('Student').child('IAP Form');
-    _supervisorDetailsRef = FirebaseDatabase.instance
-        .ref()
-        .child('Student')
-        .child('Supervisor Details');
+    _iapFormRef = FirebaseDatabase.instance.ref().child('Student').child('IAP Form');
+    _supervisorDetailsRef = FirebaseDatabase.instance.ref().child('Student').child('Supervisor Details');
     _fetchUserData();
   }
 
   Future<void> _fetchUserData() async {
     try {
-      DataSnapshot iapSnapshot =
-          await _iapFormRef.once().then((event) => event.snapshot);
-      DataSnapshot supervisorSnapshot =
-          await _supervisorDetailsRef.once().then((event) => event.snapshot);
+      DataSnapshot iapSnapshot = await _iapFormRef.once().then((event) => event.snapshot);
+      DataSnapshot supervisorSnapshot = await _supervisorDetailsRef.once().then((event) => event.snapshot);
 
-      Map<dynamic, dynamic>? iapData =
-          iapSnapshot.value as Map<dynamic, dynamic>?;
-      Map<dynamic, dynamic>? supervisorData =
-          supervisorSnapshot.value as Map<dynamic, dynamic>?;
+      Map<dynamic, dynamic>? iapData = iapSnapshot.value as Map<dynamic, dynamic>?;
+      Map<dynamic, dynamic>? supervisorData = supervisorSnapshot.value as Map<dynamic, dynamic>?;
 
       if (iapData != null && supervisorData != null) {
         iapData.forEach((key, value) {
@@ -48,16 +40,13 @@ class _ListStudent4State extends State<ListStudent4> {
             String svname = supervisorData[key]['Supervisor Name'] ?? '';
             String email = supervisorData[key]['Email'] ?? '';
             String contact = supervisorData[key]['Contact No'] ?? '';
-            
+
             UserData userData = UserData(
               matric: matric,
               name: name,
               svname: svname,
               email: email,
               contact: contact,
-
-              
-             
             );
             _userData.add(userData);
           }
@@ -71,111 +60,71 @@ class _ListStudent4State extends State<ListStudent4> {
       print('Error fetching data: $error');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(0, 146, 143, 10),
-        title: const Text(
-          'Supervisor',
-        ),
+        centerTitle: true,
+        title: const Text('Supervisor'),
       ),
-       drawer: NavBar(),
-     body: Stack(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: const AssetImage('images/iiumlogo.png'), // Add your desired image
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Colors.white.withOpacity(0.2),
-                BlendMode.dstATop,
-              ),
-            ),
-            borderRadius: BorderRadius.circular(10.0), // Add border radius
-            boxShadow: [
-              BoxShadow(
-                color: Colors.white.withOpacity(0.5), // Add shadow color
-                spreadRadius: 5,
-                blurRadius: 7,
-                offset: const Offset(0, 3), // changes position of shadow
-              ),
-            ],
-          ),
-        ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 2.0),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: ListView.builder(
-                  padding: EdgeInsets.zero,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: _userData.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      elevation: 2,
-                      margin: const EdgeInsets.all(8),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.all(16),
-                        title: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Matric: ${_userData[index].matric}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Student Name: ${_userData[index].name}'),
-                                    //Text('Supervisor Name: ${_userData[index].comname}'),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Supervisor Name: ${_userData[index].svname}'),
-                                    // Add more details as needed
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SupervisorDetails(
-                                matric: _userData[index].matric,
-                                svname: _userData[index].svname,
-                                email: _userData[index].email,
-                                contact: _userData[index].contact,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
+      drawer: NavBar(),
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('images/iiumlogo.png'), // Replace with your image path
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(
+                  Colors.white.withOpacity(0.2),
+                  BlendMode.dstATop,
                 ),
               ),
+              borderRadius: BorderRadius.circular(10.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.white.withOpacity(0.5),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: const Offset(0, 3),
+                ),
+              ],
             ),
           ),
-          if (_isLoading) // Conditionally show CircularProgressIndicator
-            const Center(
-              child: CircularProgressIndicator(),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: _isLoading
+                  ? CircularProgressIndicator()
+                  : SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Center(
+                        child: DataTable(
+                          columns: const [
+                            DataColumn(label: Text('Matric')),
+                            DataColumn(label: Text('Student Name')),
+                            DataColumn(label: Text('Supervisor Name')),
+                            DataColumn(label: Text('Email')),
+                            DataColumn(label: Text('Contact')),
+                          ],
+                          rows: _userData.map((userData) {
+                            return DataRow(cells: [
+                              DataCell(Text(userData.matric)),
+                              DataCell(Text(userData.name)),
+                              DataCell(Text(userData.svname)),
+                              DataCell(Text(userData.email)),
+                              DataCell(Text(userData.contact)),
+                            ]);
+                          }).toList(),
+                        ),
+                      ),
+                    ),
             ),
+          ),
         ],
       ),
     );
@@ -189,8 +138,6 @@ class UserData {
   final String svname;
   final String email;
   final String contact;
- 
- 
 
   UserData({
     required this.matric,
@@ -198,7 +145,5 @@ class UserData {
     required this.svname,
     required this.email,
     required this.contact,
-    
-   
   });
 }

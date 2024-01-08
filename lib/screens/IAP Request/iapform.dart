@@ -175,7 +175,7 @@ class _IAPFormState extends State<IAPForm> {
             color: Colors.grey.withOpacity(0.5), // Add shadow color
             spreadRadius: 5,
             blurRadius: 7,
-            offset: Offset(0, 3), // changes position of shadow
+            offset: const Offset(0, 3), // changes position of shadow
           ),
         ],
       ),
@@ -237,80 +237,77 @@ class _IAPFormState extends State<IAPForm> {
     );
   }
 
-  Widget _buildListTileWithGDViewer(String label, String gdUrl) {
-    return ListTile(
-      title: Text(
-        label,
-        style: const TextStyle(
-          fontSize: 16.0,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      subtitle: InkWell(
-        onTap: () async {
-          // ignore: deprecated_member_use
-          if (await canLaunch(gdUrl)) {
-            // ignore: deprecated_member_use
-            await launch(gdUrl);
-          } else {
-            print('Could not launch $gdUrl');
-          }
-        },
-        child: const Text(
-          'Google Drive',
-          style: TextStyle(
-            color: Colors.blue, // Make the link text blue
-            decoration: TextDecoration.underline, // Underline the link text
+Widget _buildListTileWithGDViewer(String label, String gdUrl) {
+  return ListTile(
+    title: Row(
+      children: [
+        Expanded(
+          flex: 2,
+          child: Text(
+            label,
+            style: const TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildListTile(String label, String data) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black),
-      ),
-      child: ListTile(
-        title: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: const TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                ],
+        const SizedBox(width: 10), // Add some spacing between label and GD URL
+        Expanded(
+          flex: 3,
+          child: InkWell(
+            onTap: () async {
+              if (await canLaunch(gdUrl)) {
+                await launch(gdUrl);
+              } else {
+                print('Could not launch $gdUrl');
+              }
+            },
+            child: const Text(
+              'Google Drive',
+              style: TextStyle(
+                color: Colors.blue,
+                decoration: TextDecoration.underline,
               ),
             ),
-            const VerticalDivider(
-              color: Colors.black,
-              thickness: 1.0,
-              width: 1,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    data,
-                    style: const TextStyle(fontSize: 16.0),
-                  ),
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
-    );
-  }
+      ],
+    ),
+  );
+}
+
+
+
+Widget _buildListTile(String label, String data) {
+  return ListTile(
+    title: Row(
+      children: [
+        Expanded(
+          flex: 2,
+          child: Text(
+            label,
+            style: const TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        const SizedBox(width: 10), // Add some spacing between label and data
+        Expanded(
+          flex: 3,
+          child: Text(
+            data,
+            style: const TextStyle(fontSize: 16.0),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+
+
+
 
   Widget _buildListTileModified(String label, String data) {
     return Container(

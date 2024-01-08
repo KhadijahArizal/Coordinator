@@ -14,7 +14,7 @@ class _ListStudent2State extends State<ListStudent2> {
   late DatabaseReference _iapFormRef;
   late DatabaseReference _studentDetailsRef;
   late List<UserData> _userData = [];
-   bool _isLoading = true;
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -52,7 +52,6 @@ class _ListStudent2State extends State<ListStudent2> {
             String contactno = studentData[key]['Contact No'] ?? '';
             String citizenship = studentData[key]['Citizenship'] ?? '';
             String address = studentData[key]['Address'] ?? '';
-            
 
             UserData userData = UserData(
               matric: matric,
@@ -64,14 +63,13 @@ class _ListStudent2State extends State<ListStudent2> {
               contactno: contactno,
               citizenship: citizenship,
               address: address,
-              
             );
             _userData.add(userData);
           }
         });
       }
 
-     setState(() {
+      setState(() {
         _isLoading = false; // Update loading state once data is fetched
       });
     } catch (error) {
@@ -89,124 +87,110 @@ class _ListStudent2State extends State<ListStudent2> {
           'Student Details',
         ),
       ),
-     drawer: NavBar(),
-    body: Stack(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: const AssetImage('images/iiumlogo.png'), // Add your desired image
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Colors.white.withOpacity(0.2),
-                BlendMode.dstATop,
-              ),
-            ),
-            borderRadius: BorderRadius.circular(10.0), // Add border radius
-            boxShadow: [
-              BoxShadow(
-                color: Colors.white.withOpacity(0.5), // Add shadow color
-                spreadRadius: 5,
-                blurRadius: 7,
-                offset: const Offset(0, 3), // changes position of shadow
-              ),
-            ],
-          ),
-        ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 2.0),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: ListView.builder(
-                  padding: EdgeInsets.zero,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: _userData.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      elevation: 2,
-                      margin: const EdgeInsets.all(8),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.all(16),
-                        title: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Matric: ${_userData[index].matric}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Student Name: ${_userData[index].name}'),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Major: ${_userData[index].major}'),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => StudentDetails(
-                            matric: _userData[index].matric,
-                            //salutation: _userData[index].salutation,
-                            name: _userData[index].name,
-                            major: _userData[index].major,
-                            ic: _userData[index].ic,
-                            email: _userData[index].email,
-                            contactno: _userData[index].contactno,
-                            citizenship: _userData[index].citizenship,
-                            address: _userData[index].address,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-          if (_isLoading) // Conditionally show CircularProgressIndicator
-            Center(
+      drawer: NavBar(),
+      body: _isLoading
+          ? const Center(
               child: CircularProgressIndicator(),
+            )
+          : Stack(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: const AssetImage(
+                          'assets/images/iiumlogo.png'), // Change to your image path
+                      fit: BoxFit.cover,
+                      colorFilter: ColorFilter.mode(
+                        Colors.white.withOpacity(0.2),
+                        BlendMode.dstATop,
+                      ),
+                    ),
+                    borderRadius:
+                        BorderRadius.circular(10.0), // Add border radius
+                    boxShadow: [
+                      BoxShadow(
+                        color:
+                            Colors.white.withOpacity(0.5), // Add shadow color
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset:
+                            const Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                ),
+                SingleChildScrollView(
+                  child: Center(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      padding: const EdgeInsets.all(8.0),
+                      child: DataTable(
+                        columns: const [
+                          DataColumn(label: Text('Matric')),
+                          DataColumn(label: Text('Student Name')),
+                          DataColumn(label: Text('Major')),
+                        ],
+                        rows: _userData.map((userData) {
+                          return DataRow(cells: [
+                            DataCell(
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => StudentDetails(
+                                        matric: userData.matric,
+                                        name: userData.name,
+                                        major: userData.major,
+                                        ic: userData.ic,
+                                        email: userData.email,
+                                        contactno: userData.contactno,
+                                        citizenship: userData.citizenship,
+                                        address: userData.address,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  userData.matric,
+                                  style: const TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    color: Colors
+                                        .green, // Change underline color if needed
+                                  ),
+                                ),
+                              ),
+                            ),
+                            DataCell(
+                              Text(userData.name),
+                            ),
+                            DataCell(
+                              Text(userData.major),
+                            ),
+                          ]);
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-        ],
-      ),
     );
   }
 }
+
 class UserData {
   final String matric;
-  //final String salutation;
   final String name;
   final String major;
   final String ic;
   final String email;
-  final String contactno; 
-  final String citizenship; 
-  final String address; 
+  final String contactno;
+  final String citizenship;
+  final String address;
 
   UserData({
     required this.matric,
-   //required this.salutation,
     required this.name,
     required this.major,
     required this.ic,

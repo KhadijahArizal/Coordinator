@@ -21,10 +21,8 @@ class _ListStudent7State extends State<ListStudent7> {
     super.initState();
     _iapFormRef =
         FirebaseDatabase.instance.ref().child('Student').child('IAP Form');
-    _finalreportDetailsRef = FirebaseDatabase.instance
-        .ref()
-        .child('Student')
-        .child('Final Report');
+    _finalreportDetailsRef =
+        FirebaseDatabase.instance.ref().child('Student').child('Final Report');
     _fetchUserData();
   }
 
@@ -42,7 +40,8 @@ class _ListStudent7State extends State<ListStudent7> {
 
       if (iapData != null && finalreportData != null) {
         iapData.forEach((key, value) {
-          if (value is Map<dynamic, dynamic> && finalreportData.containsKey(key)) {
+          if (value is Map<dynamic, dynamic> &&
+              finalreportData.containsKey(key)) {
             String matric = value['Matric'] ?? '';
             String name = value['Name'] ?? '';
             String title = finalreportData[key]['Report Title'] ?? '';
@@ -76,109 +75,100 @@ class _ListStudent7State extends State<ListStudent7> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Final Report'),
-        centerTitle: true,
-        backgroundColor: const Color.fromRGBO(0, 146, 143, 10),
-      ),
-     drawer: NavBar(),
-      body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : SingleChildScrollView(
-              child: Center(
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  padding: const EdgeInsets.all(8.0),
-                  child: DataTable(
-                    columns: const [
-                      DataColumn(label: Text('Matric')),
-                      DataColumn(label: Text('Student Name')),
-                      DataColumn(label: Text('File Name')),
-                      DataColumn(label: Text('Status')),
+        appBar: AppBar(
+          title: const Text('Final Report'),
+          centerTitle: true,
+          backgroundColor: const Color.fromRGBO(0, 146, 143, 10),
+        ),
+        drawer: NavBar(),
+        body: _isLoading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Stack(children: [
+                Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(
+                          'assets/images/iiumlogo.png'), // Change to your image path
+                      fit: BoxFit.cover,
+                      colorFilter: ColorFilter.mode(
+                        Colors.white.withOpacity(0.2),
+                        BlendMode.dstATop,
+                      ),
+                    ),
+                    borderRadius:
+                        BorderRadius.circular(10.0), // Add border radius
+                    boxShadow: [
+                      BoxShadow(
+                        color:
+                            Colors.white.withOpacity(0.5), // Add shadow color
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset:
+                            const Offset(0, 3), // changes position of shadow
+                      ),
                     ],
-                    rows: _userData.map((userData) {
-                      return DataRow(cells: [
-                        DataCell(
-                          Text(userData.matric),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => FinalReportDetails(
-                                  matric: userData.matric,
-                                  title: userData.title,
-                                  namefile: userData.namefile,
-                                  file: userData.file,
-                                  date: userData.date,
-                                  status: userData.status,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        DataCell(
-                          Text(userData.name),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => FinalReportDetails(
-                                  matric: userData.matric,
-                                  title: userData.title,
-                                  namefile: userData.namefile,
-                                  file: userData.file,
-                                  date: userData.date,
-                                  status: userData.status,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        DataCell(
-                          Text(userData.namefile),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => FinalReportDetails(
-                                  matric: userData.matric,
-                                  title: userData.title,
-                                  namefile: userData.namefile,
-                                  file: userData.file,
-                                  date: userData.date,
-                                  status: userData.status,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        DataCell(
-                          Text(userData.status),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => FinalReportDetails(
-                                  matric: userData.matric,
-                                  title: userData.title,
-                                  namefile: userData.namefile,
-                                  file: userData.file,
-                                  date: userData.date,
-                                  status: userData.status,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ]);
-                    }).toList(),
                   ),
                 ),
-              ),
-            ),
-    );
+                SingleChildScrollView(
+                  child: Center(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      padding: const EdgeInsets.all(8.0),
+                      child: DataTable(
+                        columns: const [
+                          DataColumn(label: Text('Matric')),
+                          DataColumn(label: Text('Student Name')),
+                          DataColumn(label: Text('File Name')),
+                          DataColumn(label: Text('Status')),
+                        ],
+                        rows: _userData.map((userData) {
+                          return DataRow(cells: [
+                           DataCell(
+                          GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FinalReportDetails(
+                                      matric: userData.matric,
+                                      title: userData.title,
+                                      namefile: userData.namefile,
+                                      file: userData.file,
+                                      date: userData.date,
+                                      status: userData.status,
+                                       ),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              userData.matric,
+                              style: const TextStyle(
+                                decoration: TextDecoration.underline,
+                                decorationColor:
+                                    Colors.green, // Set underline color to blue
+                                decorationThickness: 2.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                            DataCell(
+                              Text(userData.name),
+                            ),
+                            DataCell(
+                              Text(userData.namefile),
+                            ),
+                            DataCell(
+                              Text(userData.status),
+                            ),
+                          ]);
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ),
+              ]));
   }
 }
 

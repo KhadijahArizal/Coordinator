@@ -109,7 +109,7 @@ class _DashboardState extends State<Dashboard> {
                             );
                           },
                           child: CircleAvatar(
-                            radius: 40,
+                            radius: 30,
                             backgroundImage: user?.photoURL != null
                                 ? NetworkImage(user!.photoURL!)
                                 : null,

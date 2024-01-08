@@ -19,6 +19,7 @@ class SupervisorDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text('Student Matric No: $matric'),
         backgroundColor: const Color.fromRGBO(0, 146, 143, 10),
       ),
@@ -38,47 +39,28 @@ class SupervisorDetails extends StatelessWidget {
   }
 
 Widget _buildListTile(String label, String data) {
-  return Container(
-    decoration: BoxDecoration(
-      border: Border.all(color: Colors.black),
-    ),
-    child: ListTile(
-      title: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: const TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 4), 
-               
-              ],
+  return ListTile(
+    title: Row(
+      children: [
+        Expanded(
+          flex: 2,
+          child: Text(
+            label,
+            style: const TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          const VerticalDivider( 
-            color: Colors.black,
-            thickness: 1.0,
-            width: 1, 
+        ),
+        const SizedBox(width: 10), // Add some spacing between label and data
+        Expanded(
+          flex: 3,
+          child: Text(
+            data,
+            style: const TextStyle(fontSize: 16.0),
           ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  data,
-                  style: const TextStyle(fontSize: 16.0),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     ),
   );
 }

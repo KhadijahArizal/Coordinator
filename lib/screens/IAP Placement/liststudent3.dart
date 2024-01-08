@@ -3,8 +3,6 @@ import 'package:coordinator/screens/navbar.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-
-
 class UserData {
   final String matric;
   final String name;
@@ -56,6 +54,7 @@ class _ListStudent3State extends State<ListStudent3> {
   late DatabaseReference _iapFormRef;
   late DatabaseReference _companyDetailsRef;
   late Future<List<UserData>> _userFinalFuture;
+  String status = '';
 
   @override
   void initState() {
@@ -66,7 +65,7 @@ class _ListStudent3State extends State<ListStudent3> {
         .ref()
         .child('Student')
         .child('Company Details');
-     _userFinalFuture = _fetchFinalData();
+    _userFinalFuture = _fetchFinalData();
   }
 
   Future<List<UserData>> _fetchFinalData() async {
@@ -98,7 +97,7 @@ class _ListStudent3State extends State<ListStudent3> {
             String start = companyData[key]['Start Date'] ?? '';
             String end = companyData[key]['End Date'] ?? '';
             String offer = companyData[key]['Offer Letter'] ?? '';
-            String status = value['Status'] ?? '';
+            String status = companyData['Status'] ?? '';
             String studentID = key as String? ?? '';
 
             UserData user = UserData(
@@ -119,7 +118,7 @@ class _ListStudent3State extends State<ListStudent3> {
               studentID: studentID,
               onActive: (String) {},
               onInactive: (String) {},
-           );
+            );
 
             userDataList.add(user);
           }
@@ -138,7 +137,8 @@ class _ListStudent3State extends State<ListStudent3> {
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(0, 146, 143, 10),
         centerTitle: true,
-        title: const Text('Placement',
+        title: const Text(
+          'Placement',
         ),
       ),
       drawer: NavBar(),
@@ -164,7 +164,8 @@ class _ListStudent3State extends State<ListStudent3> {
             ),
           ],
         ),
-        margin: const EdgeInsets.only(top: 20), // Adjust the top margin as needed
+        margin:
+            const EdgeInsets.only(top: 20), // Adjust the top margin as needed
         child: FutureBuilder<List<UserData>>(
           future: _userFinalFuture,
           builder: (context, snapshot) {
@@ -175,102 +176,64 @@ class _ListStudent3State extends State<ListStudent3> {
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return const Center(child: Text('No data available.'));
             } else {
-              return Center(
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  child: ListView(
-                    children: snapshot.data!.map((user) {
-                      return Column(
-                        children: [
-                          InkWell(
+              return Align(
+            alignment: Alignment.topCenter,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.8,
+                  child: DataTable(
+                    columns: const [
+                      DataColumn(label: Text('Matric No')),
+                      DataColumn(label: Text('Student Name')),
+                      DataColumn(label: Text('Company')),
+                      DataColumn(label: Text('Zone')),
+                    ],
+                    rows: snapshot.data!.map((user) {
+                      return DataRow(cells: [
+                        DataCell(
+                          GestureDetector(
                             onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                builder: (context) => PlacementDetails(
-                                  matric: user.matric,
-                                  comname: user.comname,
-                                  zone: user.zone,
-                                  address: user.address,
-                                  postcode: user.postcode,
-                                  industry: user.industry,
-                                  allowance: user.allowance,
-                                  duration: user.duration,
-                                  sector: user.sector,
-                                  start: user.start,
-                                  end: user.end,
-                                  offer: user.offer,
-                                  status: user.status, 
+                                  builder: (context) => PlacementDetails(
+                                    matric: user.matric,
+                                    comname: user.comname,
+                                    zone: user.zone,
+                                    address: user.address,
+                                    postcode: user.postcode,
+                                    industry: user.industry,
+                                    allowance: user.allowance,
+                                    duration: user.duration,
+                                    sector: user.sector,
+                                    start: user.start,
+                                    end: user.end,
+                                    offer: user.offer,
+                                    status: user.status,
                                     studentID: user.studentID,
-                                    onActive: (String ) {  }, 
-                                    onInactive: (String ) {  }, 
-                                    onUpdateStatus: (String ) {  },
-                               
+                                    onActive: (String) {},
+                                    onInactive: (String) {},
+                                    onUpdateStatus: (String) {},
                                   ),
                                 ),
                               );
                             },
-                            child: Center(
-                              child: SizedBox(
-                                height: 100, // Reduced height
-                                child: Card(
-                                  elevation: 2,
-                                  child: ListTile(
-                                    title: Text(
-                                      'Matric No: ${user.matric}',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    subtitle: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Student Name: ${user.name}',
-                                              style: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                             
-                                            // Add additional fields as needed
-                                          ],
-                                        ),
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Company: ${user.comname}',
-                                              style: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 15,
-                                              ),
-                                            ),
-                                            Text(
-                                              'Zone: ${user.zone}',
-                                              style: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 15,
-                                              ),
-                                            ),
-                                            // Add additional fields as needed
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                            child: Text(
+                              user.matric,
+                              style: const TextStyle(
+                                decoration: TextDecoration.underline,
+                                decorationColor:
+                                    Colors.green, // Set underline color to blue
+                                decorationThickness: 2.0,
                               ),
                             ),
                           ),
-                          const SizedBox(height: 10), // Add spacing between items
-                        ],
-                      );
+                        ),
+                        DataCell(Text(user.name)),
+                        DataCell(Text(user.comname)),
+                        DataCell(
+                          Text(user.zone,),
+                        ),
+                      ]);
                     }).toList(),
                   ),
                 ),

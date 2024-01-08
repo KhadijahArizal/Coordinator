@@ -83,119 +83,92 @@ class _ListStudent10State extends State<ListStudent10> {
     }
   }
 
-  @override
+ @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(0, 146, 143, 10),
         centerTitle: true,
-        title: const Text(
-          'Student Survey',
-        ),
+        title: const Text('Student Survey'),
       ),
-     drawer: NavBar(),
-    body: Stack(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: const AssetImage('images/iiumlogo.png'), // Add your desired image
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Colors.white.withOpacity(0.2),
-                BlendMode.dstATop,
-              ),
-            ),
-            borderRadius: BorderRadius.circular(10.0), // Add border radius
-            boxShadow: [
-              BoxShadow(
-                color: Colors.white.withOpacity(0.5), // Add shadow color
-                spreadRadius: 5,
-                blurRadius: 7,
-                offset: const Offset(0, 3), // changes position of shadow
-              ),
-            ],
-          ),
-        ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 2.0),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: ListView.builder(
-                  padding: EdgeInsets.zero,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: _userData.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      elevation: 2,
-                      margin: const EdgeInsets.all(8),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.all(16),
-                        title: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Matric: ${_userData[index].matric}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Student Name: ${_userData[index].name}'),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Major: ${_userData[index].major}'),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => StudentSurvey(
-                            matric: _userData[index].matric,
-                            //salutation: _userData[index].salutation,
-                            name: _userData[index].name,
-                            major: _userData[index].major,
-                           // studID: _userData[index].studID,
-                            rating: _userData[index].rating,
-                            comment: _userData[index].comment,
-                            learnt: _userData[index].learnt,
-                            offer: _userData[index].offer,
-                            wish: _userData[index].wish,
-                            best: _userData[index].best,
-                              ),
-                            ),
-                          );
-                        },
+    drawer: NavBar(),
+        body: _isLoading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Stack(children: [
+                Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(
+                          'assets/images/iiumlogo.png'), // Change to your image path
+                      fit: BoxFit.cover,
+                      colorFilter: ColorFilter.mode(
+                        Colors.white.withOpacity(0.2),
+                        BlendMode.dstATop,
                       ),
-                    );
-                  },
+                    ),
+                    borderRadius:
+                        BorderRadius.circular(10.0), // Add border radius
+                    boxShadow: [
+                      BoxShadow(
+                        color:
+                            Colors.white.withOpacity(0.5), // Add shadow color
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset:
+                            const Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                ),
+                SingleChildScrollView(
+                  child: Center(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      padding: const EdgeInsets.all(8.0),
+                      child: DataTable(
+                        columns: const [
+                          DataColumn(label: Text('Matric')),
+                          DataColumn(label: Text('Student Name')),
+                          DataColumn(label: Text('Major')),
+                          DataColumn(label: Text('Rating')),
+                        ],
+                        rows: _userData.map((userData) {
+                          return DataRow(cells: [
+                           DataCell(
+                          GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => StudentSurvey(
+                                      matric: userData.matric,
+                                      name: userData.name,
+                                      major: userData.major,
+                                      rating: userData.rating,
+                                      comment: userData.comment,
+                                      learnt: userData.learnt,
+                                      offer: userData.offer,
+                                      wish: userData.wish,
+                                      best: userData.best,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Text(userData.matric),
+                            ),
+                          ),
+                          DataCell(Text(userData.name)),
+                          DataCell(Text(userData.major)),
+                          DataCell(Text(userData.rating.toString())),
+                        ]);
+                      }).toList(),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          if (_isLoading) // Conditionally show CircularProgressIndicator
-            Center(
-              child: CircularProgressIndicator(),
-            ),
-        ],
-      ),
+            ]),
     );
   }
 }

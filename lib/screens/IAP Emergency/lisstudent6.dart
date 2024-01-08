@@ -116,72 +116,34 @@ class _ListStudent6State extends State<ListStudent6> {
             ],
           ),
         ),
-          Align(
+         Align(
             alignment: Alignment.topCenter,
             child: Padding(
               padding: const EdgeInsets.only(top: 2.0),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: ListView.builder(
-                  padding: EdgeInsets.zero,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: _userData.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      elevation: 2,
-                      margin: const EdgeInsets.all(8),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.all(16),
-                        title: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Matric: ${_userData[index].matric}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Student Name: ${_userData[index].name}'),
-                                    //Text('Supervisor Name: ${_userData[index].comname}'),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Emergency Person Name: ${_userData[index].emergname}'),
-                                    // Add more details as needed
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EmergencyDetails(
-                                matric: _userData[index].matric,
-                                emergname: _userData[index].emergname,
-                                contact: _userData[index].contact,
-                                relay: _userData[index].relay,
-                                homeadd: _userData[index].homeadd,
-                              
-                               ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: DataTable(
+                    columns: const [
+                      DataColumn(label: Text('Matric')),
+                      DataColumn(label: Text('Student Name')),
+                      DataColumn(label: Text('Emergency Person Name')),
+                      DataColumn(label: Text('Contact')),
+                      DataColumn(label: Text('Relationship')), // New column
+                      DataColumn(label: Text('Home Address')), // New column
+                    ],
+                    rows: _userData.map((userData) {
+                      return DataRow(cells: [
+                        DataCell(Text(userData.matric)),
+                        DataCell(Text(userData.name)),
+                        DataCell(Text(userData.emergname)),
+                        DataCell(Text(userData.contact)),
+                        DataCell(Text(userData.relay)), // New cell
+                        DataCell(Text(userData.homeadd)), // New cell
+                      ]);
+                    }).toList(),
+                  ),
                 ),
               ),
             ),
@@ -203,8 +165,6 @@ class UserData {
   final String contact;
   final String relay;
   final String homeadd;
- 
- 
 
   UserData({
     required this.matric,
@@ -213,7 +173,5 @@ class UserData {
     required this.contact,
     required this.relay,
     required this.homeadd,
-    
-   
   });
 }
