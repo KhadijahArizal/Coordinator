@@ -129,12 +129,14 @@ class _AddExaminerState extends State<AddExaminer> {
                     ),
                   ],
                 ),
-                Row(
+                Column(children: [
+                  Row(
                   children: [
                     const SizedBox(width: 16.0), // Creating space from the edge
                     ElevatedButton(
                      onPressed: () => _addNewOption(1, _newOptionController1), // Save data for BIT Examiners
-                      child: const Text('Save BIT Examiner'),
+                     style: ElevatedButton.styleFrom(backgroundColor: const Color.fromRGBO(0, 146, 143, 10),),
+                      child: const Text('Save BIT Examiner', style: TextStyle(color: Colors.white),),
                     ),
                   ],
                 ),
@@ -168,10 +170,11 @@ class _AddExaminerState extends State<AddExaminer> {
                     const SizedBox(width: 16.0), // Creating space from the edge
                     ElevatedButton(
                       onPressed: () => _addNewOption(2, _newOptionController2), // Save data for BCS Examiners
-                      child: const Text('Save BCS Examiner'),
+                      style: ElevatedButton.styleFrom(backgroundColor: const Color.fromRGBO(0, 146, 143, 10),),
+                      child: const Text('Save BCS Examiner', style: TextStyle(color: Colors.white),),
                     ),
                   ],
-                ),
+                )]),
               ],
             ),
           ),

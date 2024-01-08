@@ -227,7 +227,7 @@ class _ProfilePageState extends State<ProfilePage>
                                             Container(
                                               alignment: Alignment.topCenter,
                                               width: 130,
-                                              height: 30,
+                                              height: 130,
                                               decoration: BoxDecoration(
                                                   border: Border.all(
                                                       width: 4,
@@ -268,7 +268,6 @@ class _ProfilePageState extends State<ProfilePage>
                                               ]),
                                         ]),
                                       ),
-                                      const SizedBox(height: 30),
                                       Padding(
                                           padding: const EdgeInsets.all(20),
                                           child: FutureBuilder<List<UserData>>(
@@ -319,7 +318,6 @@ class _ProfilePageState extends State<ProfilePage>
                                                           'Department',
                                                           user?.department ?? '-'),
                                                     ]),
-                                                    const SizedBox(height: 70),
                                                   ],
                                                 );
                                               }
@@ -343,7 +341,7 @@ class _ProfilePageState extends State<ProfilePage>
                                                   const Color.fromRGBO(
                                                       0, 146, 143, 10),
                                               minimumSize:
-                                                  const Size.fromHeight(10)),
+                                                  const Size.fromHeight(40)),
                                           child: const Text('Edit Profile',
                                               style: TextStyle(
                                                   color: Colors.white)),

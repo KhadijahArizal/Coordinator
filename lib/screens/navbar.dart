@@ -177,7 +177,7 @@ class _NavBarState extends State<NavBar> {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.dashboard_customize_outlined),
+            leading: const Icon(Icons.feedback_outlined),
              iconColor:const Color.fromRGBO(0, 146, 143, 10),
             title: const Text('Student Survey'),
             onTap: () => {

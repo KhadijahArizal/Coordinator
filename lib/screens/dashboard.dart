@@ -33,7 +33,7 @@ class _DashboardState extends State<Dashboard> {
             Text(
               'Coordinator Dashboard',
               style: TextStyle(
-                color: Colors.black, // Change text color if needed
+                color: Colors.black45, // Change text color if needed
                 fontSize: 18, // Adjust font size if needed
                 fontWeight: FontWeight.normal, // Add fontWeight if needed
               ),
@@ -109,14 +109,14 @@ class _DashboardState extends State<Dashboard> {
                             );
                           },
                           child: CircleAvatar(
-                            radius: 20,
+                            radius: 40,
                             backgroundImage: user?.photoURL != null
                                 ? NetworkImage(user!.photoURL!)
                                 : null,
                             child: user?.photoURL == null
                                 ? const Icon(
                                     Icons.account_circle,
-                                    size: 30,
+                                    size: 0,
                                   )
                                 : Container(),
                           ),

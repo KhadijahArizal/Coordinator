@@ -9,7 +9,9 @@ class Signin extends StatelessWidget {
     return Scaffold(
       body: Row(children: <Widget>[
         Expanded(
+          flex: 3,
           child: Container(
+            padding: const EdgeInsets.all(20),
             // height: 450,
             // color: Colors.green,
             child: Center(
@@ -24,37 +26,31 @@ class Signin extends StatelessWidget {
                   const Text(
                     'i-KICT',
                     style: TextStyle(
-                        color: Color.fromRGBO(148, 112, 18, 1),
-                        fontSize: 25,
-                        //fontStyle: FontStyle.italic,
+                        color: Color.fromRGBO(0, 146, 143, 10),
+                        fontSize: 40,
+                        fontStyle: FontStyle.italic,
                         fontWeight: FontWeight.w900,
                         fontFamily: 'Futura'),
                   ),
                   const Text(
-                    'Industrial Attachment Programme Dashboard',
+                    'Industrial Attachment Programme Coordinator Dashboard',
                     style: TextStyle(
                         color: Colors.black87,
                         fontSize: 25,
                         //fontStyle: FontStyle.italic,
                         //fontWeight: FontWeight.w900,
-                        fontFamily: 'Futura'),
+                        fontFamily: 'Futura'),textAlign: TextAlign.center,
                   ),
-                  const Text(
-                    '(Coordinator)',
-                    style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 25,
-                        //fontStyle: FontStyle.italic,
-                        //fontWeight: FontWeight.w900,
-                        fontFamily: 'Futura'),
-                  ),
+                  
                 ],
               ),
             ),
           ),
         ),
         Expanded(
+          flex: 2,
           child: Container(
+            padding: const EdgeInsets.all(20),
             color: const Color.fromRGBO(0, 146, 143, 10),
             height: double.infinity,
             child: Center(
