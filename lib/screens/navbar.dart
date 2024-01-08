@@ -8,6 +8,7 @@ import 'package:coordinator/screens/IAP%20Result/liststudent8.dart';
 import 'package:coordinator/screens/IAP%20Supervisor/liststudent4.dart';
 import 'package:coordinator/screens/IAP%20Request/liststudent1.dart';
 import 'package:coordinator/screens/IAP%20Student%20Details/liststudent2.dart';
+import 'package:coordinator/screens/IAP%20Survey/liststudent10.dart';
 import 'package:coordinator/screens/dashboard.dart';
 import 'package:coordinator/screens/start.dart';
 import 'package:flutter/material.dart';
@@ -173,6 +174,15 @@ class _NavBarState extends State<NavBar> {
             onTap: () => {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => const ListStudent8()))
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.dashboard_customize_outlined),
+             iconColor:const Color.fromRGBO(0, 146, 143, 10),
+            title: const Text('Student Survey'),
+            onTap: () => {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const ListStudent10()))
             },
           ),
           ListTile(

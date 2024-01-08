@@ -1,4 +1,5 @@
 import 'package:coordinator/screens/data.dart';
+import 'package:coordinator/screens/profilepage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -182,18 +183,18 @@ class _EditProfileState extends State<EditProfile> {
                                             String userId = user.uid;
                                             DatabaseReference userRef =
                                                 FirebaseDatabase.instance
-                                                    .ref('Examiners')
-                                                    .child('Examiner Details')
+                                                    .ref('Coordinator')
+                                                    .child('Coordinator Details')
                                                     .child(userId);
 
                                             userRef.set({
-                                              'Examiner Name': name.text,
+                                              'Coordinator Name': name.text,
                                               'Email': email.text,
                                               'Contact No': svData.contact.text,
                                               'Department': svData.compName.text,
                                             }).then((_) {
-                                              Navigator.pushNamed(
-                                                  context, '/profile');
+                                              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const ProfilePage()));
                                             });
                                           }
                                         },

@@ -1,10 +1,11 @@
 
 import 'package:coordinator/screens/auth.dart';
-import 'package:coordinator/screens/profilepage.dart';
+import 'package:coordinator/screens/data.dart';
 import 'package:coordinator/screens/start.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 
 void main() async {
@@ -21,7 +22,12 @@ void main() async {
         appId: "1:753383357173:web:611c991c7dc7eb479fe3bc",
         measurementId: "G-2PD5H6E2C2"),
   );
-  runApp(MyApp());
+  runApp( 
+    ChangeNotifierProvider<Data>( // Wrap your MaterialApp with ChangeNotifierProvider
+      create: (context) => Data(), // Replace Data() with your actual Data class instantiation
+      child: MyApp(), // Your MyApp widget becomes the child
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -54,10 +60,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       home: const HomePage(),
 
-     // initialRoute: '/auth',
-      routes: {
-        '/profile': (context) => const ProfilePage(),
-      },
+     
     );
   }
 }

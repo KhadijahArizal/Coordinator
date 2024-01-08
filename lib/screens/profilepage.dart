@@ -1,4 +1,5 @@
 import 'package:coordinator/screens/auth_service.dart';
+import 'package:coordinator/screens/dashboard.dart';
 import 'package:coordinator/screens/editprofile.dart';
 import 'package:coordinator/screens/navbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,10 +7,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-
-void main() => runApp(const MaterialApp(
-      debugShowCheckedModeBanner: false,
-    ));
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage(
@@ -45,7 +42,7 @@ class _ProfilePageState extends State<ProfilePage>
     super.initState();
     if (user != null) {
       _studentRef =
-          FirebaseDatabase.instance.ref('Examiners').child('Examiner Details');
+          FirebaseDatabase.instance.ref('Coordinator').child('Coordinator Details');
       _userDataFuture = _fetchUserData();
     }
   }
@@ -62,7 +59,7 @@ class _ProfilePageState extends State<ProfilePage>
       if (studentData != null) {
         studentData.forEach((key, value) {
           if (value is Map<dynamic, dynamic> && key == userId) {
-            String name = value['Examiner Name'] ?? '';
+            String name = value['Coordinator Name'] ?? '';
             String email = value['Email'] ?? '';
             String contact = value['Contact No'] ?? '';
             String department = value['Department'] ?? '';
@@ -86,7 +83,7 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   String generateSupervisorID(User user) {
-    String supervisorID = 'EX${user.uid.substring(0, 4)}';
+    String supervisorID = 'CR${user.uid.substring(0, 4)}';
 
     return supervisorID;
   }
@@ -157,11 +154,13 @@ class _ProfilePageState extends State<ProfilePage>
             color: Colors.black87.withOpacity(0.7), // Use the specified color
           ),
           onPressed: () {
-            Navigator.pushNamed(context, '/summary');
+            Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) =>  const Dashboard(title: '',)));
+          
           },
         ),
         title: const Text(
-          'Profile',
+          'Coordinator Profile',
           style: TextStyle(
               color: Colors.black87,
               fontSize: 30,
@@ -304,7 +303,7 @@ class _ProfilePageState extends State<ProfilePage>
                                                               user?.name ??
                                                                   '-'),
                                                           _buildDetail2(
-                                                              'Examiner ID',
+                                                              'Coordinator ID',
                                                               supervisorID),
                                                         ]),
                                                     Row(children: [

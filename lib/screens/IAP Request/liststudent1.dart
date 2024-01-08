@@ -260,6 +260,13 @@ class _ListStudent1State extends State<ListStudent1> {
                                                 fontSize: 14,
                                               ),
                                             ),
+                                            Text(
+                                              'Status: ${user.status}',
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 14,
+                                              ),
+                                            ),
                                             // Add additional fields as needed
                                           ],
                                         ),
