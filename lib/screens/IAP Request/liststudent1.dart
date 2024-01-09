@@ -237,17 +237,15 @@ class _ListStudent1State extends State<ListStudent1> {
                                 ),
                               );
                             },
-                            child: Text(
-                              user.matric,
-                              style: const TextStyle(
-                                decoration: TextDecoration.underline,
-                                decorationColor:
-                                    Colors.green, // Set underline color to blue
-                                decorationThickness: 2.0,
+                             child: Text(
+                                  user.matric,
+                                  style: const TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    color: Color.fromRGBO(76, 175, 80, 1), // Change underline color if needed
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
                         DataCell(Text(user.name)),
                         DataCell(Text(user.major)),
                         DataCell(

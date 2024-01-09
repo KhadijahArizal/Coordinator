@@ -135,7 +135,33 @@ class _ListStudent6State extends State<ListStudent6> {
                     ],
                     rows: _userData.map((userData) {
                       return DataRow(cells: [
-                        DataCell(Text(userData.matric)),
+                         DataCell(
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EmergencyDetails(
+                                    matric: userData.matric,
+                                    emergname: userData.emergname,
+                                    relay: userData.relay,
+                                    contact: userData.contact,
+                                    homeadd: userData.homeadd,
+                                   
+                                  
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Text(
+                                  userData.matric,
+                                  style: const TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    color: Color.fromRGBO(76, 175, 80, 1), // Change underline color if needed
+                                  ),
+                                ),
+                              ),
+                            ),
                         DataCell(Text(userData.name)),
                         DataCell(Text(userData.emergname)),
                         DataCell(Text(userData.contact)),

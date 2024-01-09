@@ -155,8 +155,7 @@ class _ListStudent2State extends State<ListStudent2> {
                                   userData.matric,
                                   style: const TextStyle(
                                     decoration: TextDecoration.underline,
-                                    color: Colors
-                                        .green, // Change underline color if needed
+                                    color: Color.fromRGBO(76, 175, 80, 1), // Change underline color if needed
                                   ),
                                 ),
                               ),

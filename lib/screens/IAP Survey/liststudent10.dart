@@ -156,9 +156,15 @@ class _ListStudent10State extends State<ListStudent10> {
                                   ),
                                 );
                               },
-                              child: Text(userData.matric),
+                              child: Text(
+                                  userData.matric,
+                                  style: const TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    color: Color.fromRGBO(76, 175, 80, 1), // Change underline color if needed
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
                           DataCell(Text(userData.name)),
                           DataCell(Text(userData.major)),
                           DataCell(Text(userData.rating.toString())),

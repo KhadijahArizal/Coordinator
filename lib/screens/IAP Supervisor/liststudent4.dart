@@ -113,7 +113,33 @@ class _ListStudent4State extends State<ListStudent4> {
                           ],
                           rows: _userData.map((userData) {
                             return DataRow(cells: [
-                              DataCell(Text(userData.matric)),
+                             DataCell(
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SupervisorDetails(
+                                    matric: userData.matric,
+                                    svname: userData.svname,
+                                    email: userData.email,
+                                    contact: userData.contact,
+                                   
+                                  
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Text(
+                                  userData.matric,
+                                  style: const TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    color: Color.fromRGBO(76, 175, 80, 1), // Change underline color if needed
+                                  ),
+                                ),
+                              ),
+                            ),
+
                               DataCell(Text(userData.name)),
                               DataCell(Text(userData.svname)),
                               DataCell(Text(userData.email)),

@@ -89,7 +89,7 @@ class _ListStudent7State extends State<ListStudent7> {
                 Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage(
+                      image: const AssetImage(
                           'assets/images/iiumlogo.png'), // Change to your image path
                       fit: BoxFit.cover,
                       colorFilter: ColorFilter.mode(
@@ -125,34 +125,33 @@ class _ListStudent7State extends State<ListStudent7> {
                         ],
                         rows: _userData.map((userData) {
                           return DataRow(cells: [
-                           DataCell(
-                          GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => FinalReportDetails(
-                                      matric: userData.matric,
-                                      title: userData.title,
-                                      namefile: userData.namefile,
-                                      file: userData.file,
-                                      date: userData.date,
-                                      status: userData.status,
-                                       ),
+                            DataCell(
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => FinalReportDetails(
+                                        matric: userData.matric,
+                                        title: userData.title,
+                                        namefile: userData.namefile,
+                                        file: userData.file,
+                                        date: userData.date,
+                                        status: userData.status,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  userData.matric,
+                                  style: const TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    color: Color.fromRGBO(76, 175, 80,
+                                        1), // Change underline color if needed
+                                  ),
                                 ),
-                              );
-                            },
-                            child: Text(
-                              userData.matric,
-                              style: const TextStyle(
-                                decoration: TextDecoration.underline,
-                                decorationColor:
-                                    Colors.green, // Set underline color to blue
-                                decorationThickness: 2.0,
                               ),
                             ),
-                          ),
-                        ),
                             DataCell(
                               Text(userData.name),
                             ),

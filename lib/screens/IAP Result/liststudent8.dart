@@ -57,6 +57,7 @@ class _ListStudent8State extends State<ListStudent8> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -272,15 +273,11 @@ class _ListStudent8State extends State<ListStudent8> {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            List<UserData> users =
-                                _ListStudent8State().userTiles;
-
-                            // Adjusting the method call with required arguments
-                            GenerateExcel.downloadExcel(users, context);
+                         
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
-                                Colors.blue), // Change the button color here
+                                Colors.green), // Change the button color here
                           ),
                           child: const Text('Download'),
                         ),
